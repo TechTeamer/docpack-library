@@ -9,38 +9,31 @@ This document outlines the structure of the DockpackLibrary project, which is di
 
 ```
 DockpackLibrary/
-├── client/                     # Frontend React application
-│   ├── public/
-│   │   └── index.html          # Entry point HTML
-│   ├── src/
-│   │   ├── components/         # React components
-│   │   ├── App.js              # Main React component
-│   │   ├── index.js            # Entry point JavaScript
-│   │   └── ...                 # Other frontend sources
-│   ├── package.json            # NPM package configuration for the client
-│   ├── webpack.config.js       # Webpack configuration
-│   └── ...                     # Other configuration files and resources
-│
-├── server/                     # Backend Node.js/Express.js application
-│   ├── src/
-│   │   ├── controllers/        # Controller modules
-│   │   ├── routes/             # API route definitions
-│   │   │   └── api.js          # Main API route
-│   │   ├── utils/              # Utility modules
+├── src/
+│   ├── client/                # Frontend React application
+│   │   ├── components/        # React components
+│   │   ├── App.js             # Main React component
+│   │   ├── index.js           # Entry point JavaScript
+│   │   └── ...                # Other frontend sources
+│   │
+│   ├── server/                # Backend Node.js/Express.js application
+│   │   ├── controllers/       # Controller modules
+│   │   ├── routes/            # API route definitions
+│   │   │   └── api.js         # Main API route
+│   │   ├── utils/             # Utility modules
 │   │   │   └── dockerManager.js # Responsible for Docker management
-│   │   └── app.js              # Main application file
-│   ├── test/                   # Mocha-Chai tests
-│   │   └── api.test.js         # API test cases
-│   ├── package.json            # NPM package configuration for the server
-│   └── ...                     # Other configuration files and resources
+│   │   └── app.js             # Main application file
+│   │
+│   └── ...                    # Shared resources or common utilities
 │
-├── documentation/              # Documentation folder
-│   ├── FaceKom SelfService SDK architecture.pdf
-│   ├── FaceKom VideoChat Felhasználói kézikönyv.pdf
-│   └── FaceKom VideoChat általános üzemeltetési kézikönyv.pdf
+├── test/                      # Tests for both frontend and backend
+│   └── api.test.js            # Example backend API test case
 │
-├── .gitignore                  # Specifies intentionally untracked files to ignore
-└── README.md                   # Project README with introduction, setup, and usage instructions
+├── package.json               # NPM package configuration for the entire project
+├── webpack.config.js          # Webpack configuration for the client
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+└── README.md                  # Project README with introduction, setup, and usage instructions
+
 ```
 
 
