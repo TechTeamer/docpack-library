@@ -17,13 +17,11 @@
     "pdf",
     "generator",
     "react",
-    "express",
-    "material-ui"
+    "express"
   ],
   "author": "Facekom Kft.",
   "license": "ISC",
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
     "dotenv": "^16.4.5",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",

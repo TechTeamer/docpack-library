@@ -18,7 +18,7 @@ DockpackLibrary/
 │   │   ├── index.js            # Entry point JavaScript
 │   │   └── ...                 # Other frontend sources
 │   ├── package.json            # NPM package configuration for the client
-│   ├── webpack.config.js       # Webpack configuration
+│   ├── webpack.config.cjs       # Webpack configuration
 │   └── ...                     # Other configuration files and resources
 │
 ├── server/                     # Backend Node.js/Express.js application

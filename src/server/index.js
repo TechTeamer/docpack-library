@@ -1,20 +1,18 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-const express = require('express');
+import express from 'express';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 if (process.env.NODE_ENV === 'development') {
-  console.log('Fejlesztési környezetben vagyunk.');
-  // Itt konfiguráld a DEV specifikus beállításokat
+  console.log('We are in a development environment.');
 } else {
-  console.log('Termelési környezetben vagyunk.');
-  // Itt konfiguráld a PROD specifikus beállításokat
+  console.log('We are in a production environment.');
 }
 
 app.get('/generate-pdf', (req, res) => {
-  // Itt generáld a PDF-et
-  res.send('PDF generálása...');
+  res.send('Generating PDF...');
 });
 
 app.listen(PORT, () => {

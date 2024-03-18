@@ -49,7 +49,7 @@ module.exports = {
     },
     {
       // WEBPACK RULES
-      files: ["webpack.config.js"],
+      files: ["webpack.config.cjs"],
       env: {
         node: true,
       },
