@@ -1,3 +1,4 @@
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 
@@ -25,11 +26,19 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html'
     }),
+    new Dotenv(),
   ],
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000,
     open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        secure: false,
+        changeOrigin: true
+      },
+    },
   },
 }
