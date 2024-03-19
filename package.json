@@ -1,5 +1,5 @@
 {
-  "name": "dockpacklibrary",
+  "name": "@techteamer/dockpack",
   "version": "0.0.1",
   "description": "",
   "main": "src/server/index.js",
