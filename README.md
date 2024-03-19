@@ -9,6 +9,7 @@ This document outlines the structure of the DockpackLibrary project, which is di
 
 ```
 DockpackLibrary/
+<<<<<<< HEAD
 ├── client/                     # Frontend React application
 │   ├── public/
 │   │   └── index.html          # Entry point HTML
@@ -42,6 +43,36 @@ DockpackLibrary/
 ├── .gitignore                  # Specifies intentionally untracked files to ignore
 └── README.md                   # Project README with introduction, setup, and usage instructions
 ```
+=======
+├── src/
+│   ├── client/                # Frontend React application
+│   │   ├── components/        # React components
+│   │   ├── App.js             # Main React component
+│   │   ├── index.js           # Entry point JavaScript
+│   │   └── ...                # Other frontend sources
+│   │
+│   ├── server/                # Backend Node.js/Express.js application
+│   │   ├── controllers/       # Controller modules
+│   │   ├── routes/            # API route definitions
+│   │   │   └── api.js         # Main API route
+│   │   ├── utils/             # Utility modules
+│   │   │   └── dockerManager.js # Responsible for Docker management
+│   │   └── app.js             # Main application file
+│   │
+│   └── ...                    # Shared resources or common utilities
+│
+├── test/                      # Tests for both frontend and backend
+│   └── api.test.js            # Example backend API test case
+│
+├── package.json               # NPM package configuration for the entire project
+├── webpack.config.js          # Webpack configuration for the client
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+└── README.md                  # Project README with introduction, setup, and usage instructions
+
+```
+
+
+>>>>>>> b58a6eefec19d8bf09be0c6ec5c3dd1091822753
 
 ## Description
 
