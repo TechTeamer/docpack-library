@@ -9,41 +9,6 @@ This document outlines the structure of the DockpackLibrary project, which is di
 
 ```
 DockpackLibrary/
-<<<<<<< HEAD
-├── client/                     # Frontend React application
-│   ├── public/
-│   │   └── index.html          # Entry point HTML
-│   ├── src/
-│   │   ├── components/         # React components
-│   │   ├── App.js              # Main React component
-│   │   ├── index.js            # Entry point JavaScript
-│   │   └── ...                 # Other frontend sources
-│   ├── package.json            # NPM package configuration for the client
-│   ├── webpack.config.cjs       # Webpack configuration
-│   └── ...                     # Other configuration files and resources
-│
-├── server/                     # Backend Node.js/Express.js application
-│   ├── src/
-│   │   ├── controllers/        # Controller modules
-│   │   ├── routes/             # API route definitions
-│   │   │   └── api.js          # Main API route
-│   │   ├── utils/              # Utility modules
-│   │   │   └── dockerManager.js # Responsible for Docker management
-│   │   └── app.js              # Main application file
-│   ├── test/                   # Mocha-Chai tests
-│   │   └── api.test.js         # API test cases
-│   ├── package.json            # NPM package configuration for the server
-│   └── ...                     # Other configuration files and resources
-│
-├── documentation/              # Documentation folder
-│   ├── FaceKom SelfService SDK architecture.pdf
-│   ├── FaceKom VideoChat Felhasználói kézikönyv.pdf
-│   └── FaceKom VideoChat általános üzemeltetési kézikönyv.pdf
-│
-├── .gitignore                  # Specifies intentionally untracked files to ignore
-└── README.md                   # Project README with introduction, setup, and usage instructions
-```
-=======
 ├── src/
 │   ├── client/                # Frontend React application
 │   │   ├── components/        # React components
@@ -72,7 +37,6 @@ DockpackLibrary/
 ```
 
 
->>>>>>> b58a6eefec19d8bf09be0c6ec5c3dd1091822753
 
 ## Description
 
