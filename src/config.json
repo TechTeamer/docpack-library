@@ -1,0 +1,26 @@
+{
+  "operations": [
+    {
+      "type": "addPdf",
+      "contentPath": "path/to/html",
+      "outputPath": "path/to/output.pdf"
+    },
+    {
+      "type": "collectManual",
+      "service": "serviceName"
+    },
+    {
+      "type": "getFiles",
+      "root": "path/to/source"
+    },
+    {
+      "type": "packFolder",
+      "source": "path/to/source",
+      "destination": "path/to/destination"
+    },
+    {
+      "type": "youtrack",
+      "source": "path/to/source"
+    }
+  ]
+}

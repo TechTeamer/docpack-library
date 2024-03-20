@@ -3,10 +3,8 @@ FROM node:18 AS build-stage
 WORKDIR /app
 
 COPY package*.json ./
-COPY webpack.config.cjs ./
 COPY .babelrc ./
 COPY src/ ./src/
-COPY public/ ./public/
 
 RUN npm install
 
@@ -18,7 +16,6 @@ WORKDIR /app
 
 COPY package*.json ./
 
-COPY --from=build-stage /app/src/server ./server
 COPY --from=build-stage /app/dist ./dist
 
 RUN npm install --only=production

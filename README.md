@@ -6,53 +6,100 @@ FaceKom Dockpack Library
 ### Programmatic usage
 
 ```js
-const path = require('node:path')
-const dockpack = require('@techteamer/dockpack')
 
-const configPath = path.join(process.cwd(), 'docs.json')
+import { main } from './src/index.js';
 
-dockpack.generate({
-  configPath,
-  options: {}
-})
+main().then(() => {
+    console.log('Operation completed.');
+}).catch((error) => {
+    console.error('Error:', error);
+});
+
 ```
 
-## API
+# API
 
-## `.generate(options)`
+### .generate(config)
 
-Description...
+This method generates results based on the provided configuration object. It iterates through each operation defined in the configuration, performing actions based on the operation's type.
 
-**options**: `Object`
+> **Parameter**
 
-Description...
+***config***: `Object`
 
-**options.configPath**: `String`
+ The configuration object that defines the operations to be executed.
 
-Description...
+ **format:**: `JSON`
 
-## docs.json config
+> **Returns**
 
-Description...
+***promise***: `Object`
 
-**format:** `JSON`
+ A promise that resolves to the generated result.
 
-**Exhaustive example**
+ ## Main configuration
+
+**Example**
 
 ```json
 {
-  // TODO
-  "<book_name>": {
-    "name": "string",
-    "files": ["<glob_pattern>"]
-  }
+  "operations": [
+    {
+      "type": "addPdf",
+      "contentPath": "path/to/html",
+      "outputPath": "path/to/output.pdf"
+    },
+    {
+      "type": "collectManual",
+      "service": "serviceName"
+    },
+    {
+      "type": "getFiles",
+      "root": "path/to/source"
+    },
+    {
+      "type": "packFolder",
+      "source": "path/to/source",
+      "destination": "path/to/destination"
+    },
+    {
+      "type": "youtrack",
+      "source": "path/to/source"
+    }
+  ]
 }
+
 ```
 
-**book_name**: `Object`
+### Operations: `Array` 
 
-Description...
+The configuration object's operations array defines the tasks that the library will execute. Each object in the array must specify the operation type and relevant parameters.
 
-**book_name.name**: `String`
+### `getFiles`:
 
-Description...
+Part of the getFilesModule, this function fetches all files within a specified root directory, excluding those listed in the .buildignore file.
+
+> **Parameter**
+
+***root***: : `String`
+
+  The root directory from which files will be collected.
+
+> **Returns**
+
+***promise***: `Array <string>`
+
+  A promise that resolves to the generated result.
+
+...
+
+
+### File structure
+
+This documentation relates to the following file structure:
+
+`src/index.js` - Contains the main logic for reading the configuration, performing operations, and logging results.
+
+`src/config.json` - A JSON file containing the configuration for operations.
+
+`src/services/getFiles.js` - Provides functionality to fetch files from a directory, excluding ignored files.
