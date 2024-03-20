@@ -1,17 +1,17 @@
-import { promises as fs } from "fs";
-import path from "path";
-import globPromise from "glob-promise";
+const fs = require("fs").promises
+const path = require("path")
+const globPromise = require("glob-promise")
 
 const getFilesModule = {
   async getFiles(root) {
-    let ignore = [];
-    const ignoreFileName = path.join(root, ".buildignore");
+    let ignore = []
+    const ignoreFileName = path.join(root, ".buildignore")
 
     try {
-      const ignoreFileContent = await fs.readFile(ignoreFileName, "utf8");
-      ignore = ignoreFileContent.trim().split("\n");
+      const ignoreFileContent = await fs.readFile(ignoreFileName, "utf8")
+      ignore = ignoreFileContent.trim().split("\n")
     } catch (error) {
-      console.error("Error reading .buildignore file:", error);
+      console.error("Error reading .buildignore file:", error)
     }
 
     try {
@@ -19,15 +19,15 @@ const getFilesModule = {
         ignore,
         matchBase: true,
         dot: true,
-        cwd: root,
-      };
-      const matches = await globPromise("*", options);
-      return matches;
+        cwd: root
+      }
+      const matches = await globPromise("*", options)
+      return matches
     } catch (error) {
-      console.error("Error fetching files:", error);
-      return [];
+      console.error("Error fetching files:", error)
+      return []
     }
-  },
-};
+  }
+}
 
-export default getFilesModule;
+module.exports = getFilesModule

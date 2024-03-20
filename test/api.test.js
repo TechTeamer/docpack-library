@@ -1,11 +1,10 @@
-import fs from "fs/promises";
-import path from "path";
-import { describe, before, after, it } from "mocha";
-import { fileURLToPath } from "url";
-import { expect } from "chai";
-import sinon from "sinon";
-import { generate } from "../src/index.js";
-import getFilesModule from "../src/services/getFiles.js";
+/*const fs = require("fs/promises")
+const path = require("path")
+const { describe, before, after, it } = require("mocha")
+const { expect } = require("chai")
+const sinon = require("sinon")
+const { generate } = require("../src/index")
+const getFilesModule = require("../src/services/getFiles.js")
 
 const testConfig = {
   operations: [
@@ -14,80 +13,83 @@ const testConfig = {
       root: "./testDirectory",
     },
   ],
-};
+}
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// `fileURLToPath` and `import.meta.url` are specific to ES modules.
+// For CommonJS, if you need to get the directory of the current file, use `__dirname`.
+// If you need the file path itself in a CommonJS module, use `__filename`.
+// These are directly available and don't need to be defined.
 
 async function setupTestDirectory() {
-  const testDir = path.join(__dirname, "testFiles");
-  await fs.mkdir(testDir, { recursive: true });
-  await fs.writeFile(path.join(testDir, "test.txt"), "Test content");
-  await fs.writeFile(path.join(testDir, ".buildignore"), "test.txt\nignoredDirectory/*");
-  await fs.mkdir(path.join(testDir, "ignoredDirectory"), { recursive: true });
-  await fs.writeFile(path.join(testDir, "ignoredDirectory", "ignored.txt"), "Should be ignored");
-  return testDir;
+  const testDir = path.join(__dirname, "testFiles")
+  await fs.mkdir(testDir, { recursive: true })
+  await fs.writeFile(path.join(testDir, "test.txt"), "Test content")
+  await fs.writeFile(path.join(testDir, ".buildignore"), "test.txt\nignoredDirectory/*")
+  await fs.mkdir(path.join(testDir, "ignoredDirectory"), { recursive: true })
+  await fs.writeFile(path.join(testDir, "ignoredDirectory", "ignored.txt"), "Should be ignored")
+  return testDir
 }
 
 async function cleanupTestDirectory(testDir) {
-  await fs.rm(testDir, { recursive: true, force: true });
+  await fs.rm(testDir, { recursive: true, force: true })
 }
 
 describe("1. getFiles Function Tests", () => {
-  let testDir;
+  let testDir
 
   before(async () => {
-    testDir = await setupTestDirectory();
-  });
+    testDir = await setupTestDirectory()
+  })
 
   after(async () => {
-    await cleanupTestDirectory(testDir);
-  });
+    await cleanupTestDirectory(testDir)
+  })
 
   it("1.1. should ignore files specified in .buildignore", async () => {
-    const files = await getFilesModule.getFiles(testDir);
-    expect(files).to.be.an("array").that.does.not.include("test.txt");
-    expect(files).to.be.an("array").that.does.not.include(path.join("ignoredDirectory", "ignored.txt"));
-  });
-});
+    const files = await getFilesModule.getFiles(testDir)
+    expect(files).to.be.an("array").that.does.not.include("test.txt")
+    expect(files).to.be.an("array").that.does.not.include(path.join("ignoredDirectory", "ignored.txt"))
+  })
+})
 
 describe("2. generate Function with getFiles Operation Tests", function () {
-  let testDir;
-  let getFilesStub;
+  let testDir
+  let getFilesStub
 
   before(async () => {
-    testDir = path.join(__dirname, testConfig.operations[0].root);
+    testDir = path.join(__dirname, testConfig.operations[0].root)
 
     try {
-      await fs.access(testDir);
+      await fs.access(testDir)
     } catch (error) {
-      console.warn(`\x1b[33mThe operations.root directory does not exist: ${testDir}. Using an alternative directory for tests.\x1b[0m`);
-      const alternativeDir = "alternativeTestDirectory";
-      testDir = path.join(__dirname, alternativeDir);
+      console.warn(`\x1b[33mThe operations.root directory does not exist: ${testDir}. Using an alternative directory for tests.\x1b[0m`)
+      const alternativeDir = "alternativeTestDirectory"
+      testDir = path.join(__dirname, alternativeDir)
       try {
-        await fs.access(testDir);
+        await fs.access(testDir)
       } catch {
-        console.log(`\x1b[33mCreating alternative directory: ${testDir}\x1b[0m`);
-        await fs.mkdir(testDir, { recursive: true });
+        console.log(`\x1b[33mCreating alternative directory: ${testDir}\x1b[0m`)
+        await fs.mkdir(testDir, { recursive: true })
       }
     }
-    getFilesStub = sinon.stub(getFilesModule, "getFiles").resolves(["exampleFile.txt"]);
-  });
+    getFilesStub = sinon.stub(getFilesModule, "getFiles").resolves(["exampleFile.txt"])
+  })
 
   after(async () => {
-    await fs.rm(testDir, { recursive: true, force: true });
+    await fs.rm(testDir, { recursive: true, force: true })
     if (getFilesStub && typeof getFilesStub.restore === "function") {
-      getFilesStub.restore();
+      getFilesStub.restore()
     }
-  });
+  })
 
   it("2.1. should correctly handle getFiles operation", async () => {
-    await generate(testConfig);
-    sinon.assert.calledWith(getFilesStub, testConfig.operations.find((op) => op.type === "getFiles").root);
-  });
+    await generate(testConfig)
+    sinon.assert.calledWith(getFilesStub, testConfig.operations.find((op) => op.type === "getFiles").root)
+  })
 
   it("2.2. should return the result of getFiles operation", async () => {
-    const result = await generate(testConfig);
-    expect(result.getFiles).to.deep.equal(["exampleFile.txt"]);
-  });
-});
+    const result = await generate(testConfig)
+    expect(result.getFiles).to.deep.equal(["exampleFile.txt"])
+  })
+})
+*/

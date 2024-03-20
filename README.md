@@ -7,7 +7,7 @@ FaceKom Dockpack Library
 
 ```js
 
-import { main } from './src/index.js';
+const { main } = require('./src/index');
 
 main().then(() => {
     console.log('Operation completed.');

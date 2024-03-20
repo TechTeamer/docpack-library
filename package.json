@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "main": "src/index.js",
-  "type": "module",
   "scripts": {
+    "build": "babel src -d dist --presets=@babel/preset-env",
     "server": "node src/index.js",
     "server:watch": "nodemon src/index.js",
     "test": "mocha ./test/api.test.js",
@@ -31,9 +31,11 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.6",
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.3",
     "@babel/eslint-parser": "^7.23.10",
-    "@babel/preset-env": "^7.24.0",
+    "@babel/plugin-syntax-import-attributes": "^7.24.1",
+    "@babel/preset-env": "^7.24.3",
     "babel-loader": "^8.2.2",
     "chai": "^5.1.0",
     "eslint": "^8.57.0",
