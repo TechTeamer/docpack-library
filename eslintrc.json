@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "extends": ["standard", "plugin:n/recommended"],
+  "rules": {
+    "curly": ["error", "all"],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+    "guard-for-in": "error",
+    "no-console": "error",
+    "no-debugger": "error",
+    "radix": "error",
+    "n/no-deprecated-api": "warn",
+    "n/no-process-exit": "off",
+    "no-process-exit": "off",
+    "n/shebang": "off",
+    "no-empty-function": "error",
+    "no-shadow": "warn",
+    "indent": ["error", 2],
+    "max-len": ["error", { "code": 240 }],
+    "no-trailing-spaces": "error",
+    "eol-last": ["error", "always"],
+    "unicode-bom": ["error", "never"],
+    "semi": ["error", "never"]
+  },
+  "env": {
+    "node": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "script"
+  }
+}
