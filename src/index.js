@@ -7,16 +7,16 @@ const getFilesModule = require("./services/getFiles.js")
  */
 async function generate(config) {
   let result = {}
-  const operations = config.operations
+  const options = config.options
 
-  for (const operation of operations) {
-    switch (operation.type) {
+  for (const option of options) {
+    switch (option.type) {
     case "addPdf":
       break
     case "collectManual":
       break
     case "getFiles":
-      result.getFiles = await getFilesModule.getFiles(operation.root)
+      result.getFiles = await getFilesModule.getFiles(option.root)
       break
     case "packFolder":
       break
@@ -35,8 +35,7 @@ async function generate(config) {
  * @returns {Promise<void>} A promise that resolves when the main function completes.
  */
 async function main() {
-  const configModule = await Promise.resolve().then(() => require('./config.json'))
-  const config = configModule
+  const config = require('./docs.json');
 
   console.log("Config:", config)
 

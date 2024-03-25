@@ -16,7 +16,7 @@ describe("Setup Tests", function () {
   });
 
   const testConfig = {
-    operations: [
+    options: [
       {
         type: "getFiles",
         root: "./testDirectory",
@@ -56,17 +56,17 @@ describe("Setup Tests", function () {
     });
   });
 
-  describe("2. generate Function with getFiles Operation Tests", function () {
+  describe("2. generate Function with getFiles option Tests", function () {
     let testDir;
     let getFilesStub;
 
     before(async () => {
-      testDir = path.join(__dirname, testConfig.operations[0].root);
+      testDir = path.join(__dirname, testConfig.options[0].root);
 
       try {
         await fs.access(testDir);
       } catch (error) {
-        console.warn(`\x1b[33mThe operations.root directory does not exist: ${testDir}. Using an alternative directory for tests.\x1b[0m`);
+        console.warn(`\x1b[33mThe options.root directory does not exist: ${testDir}. Using an alternative directory for tests.\x1b[0m`);
         const alternativeDir = "alternativeTestDirectory";
         testDir = path.join(__dirname, alternativeDir);
         try {
@@ -86,12 +86,12 @@ describe("Setup Tests", function () {
       }
     });
 
-    it("2.1. should correctly handle getFiles operation", async () => {
+    it("2.1. should correctly handle getFiles option", async () => {
       await generate(testConfig);
-      sinon.assert.calledWith(getFilesStub, testConfig.operations.find((op) => op.type === "getFiles").root);
+      sinon.assert.calledWith(getFilesStub, testConfig.options.find((op) => op.type === "getFiles").root);
     });
 
-    it("2.2. should return the result of getFiles operation", async () => {
+    it("2.2. should return the result of getFiles option", async () => {
       const result = await generate(testConfig);
       expect(result.getFiles).to.deep.equal(["exampleFile.txt"]);
     });

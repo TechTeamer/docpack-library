@@ -1,5 +1,5 @@
 {
-  "operations": [
+  "options": [
     {
       "type": "addPdf",
       "contentPath": "path/to/html",

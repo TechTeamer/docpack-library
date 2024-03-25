@@ -10,7 +10,7 @@ FaceKom Dockpack Library
 const { main } = require('./src/index');
 
 main().then(() => {
-    console.log('Operation completed.');
+    console.log('operation completed.');
 }).catch((error) => {
     console.error('Error:', error);
 });
@@ -43,7 +43,7 @@ This method generates results based on the provided configuration object. It ite
 
 ```json
 {
-  "operations": [
+  "options": [
     {
       "type": "addPdf",
       "contentPath": "path/to/html",
@@ -71,7 +71,7 @@ This method generates results based on the provided configuration object. It ite
 
 ```
 
-### Operations: `Array` 
+### Options: `Array` 
 
 The configuration object's operations array defines the tasks that the library will execute. Each object in the array must specify the operation type and relevant parameters.
 
@@ -100,6 +100,6 @@ This documentation relates to the following file structure:
 
 `src/index.js` - Contains the main logic for reading the configuration, performing operations, and logging results.
 
-`src/config.json` - A JSON file containing the configuration for operations.
+`src/docs.json` - A JSON file containing the configuration for operations.
 
 `src/services/getFiles.js` - Provides functionality to fetch files from a directory, excluding ignored files.
