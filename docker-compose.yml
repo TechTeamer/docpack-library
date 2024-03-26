@@ -1,14 +1,13 @@
 version: '3.8'
 services:
   app:
-    build:
-      context: .
-      target: production-stage
-    ports:
-      - "8080:80"
-    env_file: 
-      - ./.env
-    environment:
-      - PORT=80
+    build: .
+    command: npx nodemon index.js
     volumes:
       - .:/app
+      - /app/node_modules
+    ports:
+      - "8080:3000"
+    environment:
+      - NODE_ENV=development
+    working_dir: /app

@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "TechTeamer",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "npx nodemon index.js",
     "build": "babel src --out-dir dist",
     "test": "mocha ./test/api.test.js",
     "lint": "eslint .",

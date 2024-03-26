@@ -1,35 +1,19 @@
-FROM node:16 AS build-stage
+FROM node:16
+
+RUN useradd -m appuser
 
 WORKDIR /app
 
 COPY package*.json ./
 
-COPY .babelrc ./
-
-COPY eslintrc.json ./
-
-COPY .env ./
-
-COPY index.js ./
-
-COPY src ./src
-
 RUN npm install
 
-RUN npm run build
+COPY . .
 
-FROM node:16 AS production-stage
+RUN chown -R appuser:appuser /app
 
-WORKDIR /app
+USER appuser
 
-COPY --from=build-stage /app/dist ./dist
+EXPOSE 3000
 
-COPY index.js package*.json .env ./
-
-RUN npm install --only=production
-
-ENV PORT 80
-
-EXPOSE 80
-
-CMD ["node", "dist/index.js"]
+CMD ["npx", "nodemon", "index.js"]
