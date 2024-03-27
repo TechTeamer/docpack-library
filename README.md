@@ -138,33 +138,45 @@ Part of the `src/services/addPdf.js` module, this function is tasked with creati
 
 > **Parameters**
 
-- ***name***: `String`
+***contentPath***: `String`
+
+  Specifies the path to the HTML content that will be converted into a PDF. This path points to the location of the HTML file(s) that serve as the source for the PDF generation process.
+
+***outputPath***: `String`
+
+  Determines the output path where the generated PDF file will be saved. This is the final location of the PDF document after the conversion process is complete.
+
+***options***: `Object`
+
+  Additional parameters to customize the file retrieval process:
+
+- **name**: `String`
 
   The name of the generated PDF file. This determines the output PDF file's name.
 
-- ***include***: `Boolean`
+- **include**: `Boolean`
 
   Determines whether the document should be included in the PDF generation. If `true`, the document will be part of the generated PDF.
 
-- ***files***: `Array<String>`
+- **files**: `Array<String>`
 
   An array containing the paths to files to be converted into PDF. These can be markdown or asciidoc files.
 
-- ***attachments***: `String` or `Array<String>`
+- **attachments**: `String` or `Array<String>`
 
   Optional. A glob pattern or an array defining the files to be attached alongside the PDF as attachments. This could include files like `.openapi.yml` for documentation purposes.
 
-- ***path***: `String`
+- **path**: `String`
 
   The directory where the generated PDF file will be placed by the module. This determines the output location of the PDF files.
 
-- ***merge***: `Boolean`
+- **merge**: `Boolean`
 
   If `true`, the module merges all specified files into a single PDF document. If `false`, it generates separate PDF files for each file.
 
 > **Returns**
 
-- ***promise***: `void`
+   ***promise***: `void`
 
   A promise that resolves when the PDF generation is completed. There is no explicit return value, but upon successful operation, the generated PDF files will be placed in the specified location.
 
