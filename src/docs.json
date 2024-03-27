@@ -3,7 +3,15 @@
     {
       "type": "addPdf",
       "contentPath": "path/to/html",
-      "outputPath": "path/to/output.pdf"
+      "outputPath": "path/to/output.pdf",
+      "options": {
+        "name": "output.pdf",
+        "include": true,
+        "files": ["sample.md", "sample.adoc"],
+        //TODO: "attachments": "" || ["*.openapi.yml"] <- glob or array of globs, these files will be copied next to the pdf file
+        "path": "pdfs",
+        "merge": true
+      }
     },
     {
       "type": "collectManual",
@@ -11,7 +19,14 @@
     },
     {
       "type": "getFiles",
-      "root": "path/to/source"
+      "root": "path/to/source",
+      "options": {
+        "ignore": true, // default: false
+        "matchBase": true,
+        "dot": true,
+        "sync": true,
+        "cwd": "root"
+      }
     },
     {
       "type": "packFolder",
