@@ -19,14 +19,7 @@
     },
     {
       "type": "getFiles",
-      "root": "path/to/source",
-      "options": {
-        "ignore": true,
-        "matchBase": true,
-        "dot": true,
-        "sync": true,
-        "cwd": "root"
-      }
+      "root": "path/to/source"
     },
     {
       "type": "packFolder",

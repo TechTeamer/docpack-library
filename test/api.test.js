@@ -20,6 +20,7 @@ describe("Setup Tests", function () {
       {
         type: "getFiles",
         root: "./testDirectory",
+        //TODO: options
       },
     ],
   }
@@ -97,8 +98,7 @@ describe("Setup Tests", function () {
       }
       getFilesStub = sinon.stub(getFilesModule, "getFiles").resolves(["exampleFile.txt"])
     });
-  
-    // Clean up after tests
+
     after(async () => {
       await fs.rm(testDir, { recursive: true, force: true })
       if (getFilesStub && typeof getFilesStub.restore === "function") {

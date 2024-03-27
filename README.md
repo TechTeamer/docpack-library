@@ -100,32 +100,6 @@ Part of the getFilesModule, this function fetches all files within a specified r
 
   The root directory from which files will be collected.
 
-***options***: `Object`
-
-  Additional parameters to customize the file retrieval process:
-  
-  - **ignore**: `Array<string>` 
-  
-    An array specifying files or directories to exclude from the search.
-  
-  - **matchBase**: `Boolean` 
-    
-    When set to `true`, matches files based on their basename, ignoring the path.
-  
-  - **dot**: `Boolean` 
-  
-    Includes files starting with a dot (hidden files) when set to `true`.
-
-  - **sync**: `Boolean` 
-  
-    Indicates whether the operation should be performed synchronously. When set to true, the file matching process is executed synchronously, blocking further execution until completion. This option might be useful in certain scenarios where synchronous execution is preferred, though it's generally recommended to use asynchronous operations to avoid blocking the Node.js event loop.
-
-  - **cwd**: `String` 
-  
-    Specifies the current working directory for the operation. This option determines the base directory from which the glob patterns will be applied. It's particularly useful when you want to perform file operations relative to a specific directory in your project, rather than the default directory where the Node.js process was started.
-  
-  These options enhance the flexibility and control over the file selection, allowing for a more tailored operation based on project-specific needs.
-
 > **Returns**
 
 ***promise***: `Array <string>`
