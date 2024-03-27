@@ -2,7 +2,18 @@ const fs = require("fs").promises
 const path = require("path")
 const globPromise = require("glob-promise")
 
+/**
+ * Module for retrieving files from a specified root directory.
+ * @namespace getFilesModule
+ */
 const getFilesModule = {
+  /**
+   * Retrieves files from the specified root directory.
+   * @async
+   * @memberof getFilesModule
+   * @param {string} root - The root directory to search for files.
+   * @returns {Promise<Array<string>>} - A promise that resolves to an array of file paths.
+   */
   async getFiles(root) {
     let ignore = []
     const ignoreFileName = path.join(root, ".buildignore")

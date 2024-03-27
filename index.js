@@ -1,5 +1,5 @@
-const { main } = require('./src/index.js');
+const { main } = require('./src/index.js')
 
-console.log('start');
+console.log('start')
 
-module.exports = { main };
+module.exports = { main }
