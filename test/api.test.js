@@ -19,8 +19,7 @@ describe("Setup Tests", function () {
     options: [
       {
         type: "getFiles",
-        root: "./testDirectory",
-        //TODO: options
+        root: "./testDirectory"
       },
     ],
   }
