@@ -21,8 +21,7 @@
       "type": "getFiles",
       "root": "path/to/source",
       "options": {
-        "ignore": true, // default: false
-        "matchBase": true,
+        "ignore": true,
         "dot": true,
         "sync": true,
         "cwd": "root"
