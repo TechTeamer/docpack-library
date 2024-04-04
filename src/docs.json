@@ -15,7 +15,8 @@
     },
     {
       "type": "collectManual",
-      "service": "serviceName"
+      "service": "serviceName",
+      "workDir": "/workspace"
     },
     {
       "type": "getFiles",
@@ -24,11 +25,29 @@
     {
       "type": "packFolder",
       "source": "path/to/source",
-      "destination": "path/to/destination"
+      "destination": "path/to/destination",
+      "workDir": "/workspace"
     },
     {
       "type": "youtrack",
       "source": "path/to/source"
+    },
+    {
+      "type": "archive",
+      "workDir": "/workspace",
+      "options": {
+        "outputFileName": "path/to/archive.zip",
+        "packSourceCode": false,
+        "packBuildCode": false,
+        "packDevEnvironment": false,
+        "packDocumentation": false,
+        "packDockerImages": false,
+        "packCredits": false,
+        "packAudit": false,
+        "packManual": true,
+        "youTrackToken": "your-youtrack-token",
+        "whitelist": ["vuer_oss", "vuer_css", "portal_css", "vuer_cv", "vuer_android", "vuer_ios_sdk"]
+      }
     }
   ]
 }

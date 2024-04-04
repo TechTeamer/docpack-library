@@ -5,6 +5,11 @@ const marked = require('marked')
 const puppeteer = require('puppeteer')
 const asciidoctor = require('asciidoctor')()
 
+/**
+ * Module for adding PDF files based on the provided document configuration.
+ *
+ * @module addPdfModule
+ */
 const addPdfModule = {
   /**
    * Adds PDF files based on the provided document configuration.

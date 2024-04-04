@@ -12,6 +12,13 @@
 # Build
 /dist/
 
+# Test
+/test/testFiles/
+
 # Docker
 .devcontainer/
+
+# In Progress
+src/services/archive.js
+src/services/collectManual.js
 ```

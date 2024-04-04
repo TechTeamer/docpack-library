@@ -2,9 +2,12 @@ const fs = require("fs/promises")
 const path = require("path")
 const { describe, before, after, it } = require("mocha")
 const sinon = require("sinon")
+const JSZip = require("jszip")
 const { generate } = require("../src/index")
+
 const getFilesModule = require("../src/services/getFiles.js")
 const { addPdfModule } = require("../src/services/addPdf.js")
+const packFolder = require("../src/services/packFolder.js")
 
 let chai
 let expect
@@ -69,6 +72,7 @@ describe("Setup Tests", function () {
     })
   
     it("1.1. should ignore files specified in .buildignore", async () => {
+      console.log(`testDir: ${testDir}`);
       const files = await getFilesModule.getFiles(testDir)
       expect(files).to.be.an("array").that.does.not.include("test.txt")
       expect(files).to.be.an("array").that.does.not.include(path.join("ignoredDirectory", "ignored.txt"))
@@ -135,7 +139,6 @@ describe("Setup Tests", function () {
     it("2.1. should generate a single PDF from md file when merge is false", async function () {
       const documentConfigMd = {
         name: "sample.pdf",
-        include: true,
         files: ["sample.md"],
         path: "pdfs",
         merge: false
@@ -151,7 +154,6 @@ describe("Setup Tests", function () {
     it("2.2. should generate a single PDF from adoc file when merge is false", async function () {
       const documentConfigAdoc = {
         name: "sample.pdf",
-        include: true,
         files: ["sample.adoc"],
         path: "pdfs",
         merge: false
@@ -167,7 +169,6 @@ describe("Setup Tests", function () {
     it("2.3. should generate a single PDF from multiple files (.md, .adoc) when merge is true", async function () {
       const documentConfigMerge = {
         name: "MergedDocument.pdf",
-        include: true,
         files: ["sample.md", "sample.adoc"],
         path: "pdfs",
         merge: true
@@ -178,6 +179,42 @@ describe("Setup Tests", function () {
       let pdfExistsMerge = await fs.access(pdfPathMerge).then(() => true).catch(() => false)
     
       expect(pdfExistsMerge).to.be.true
+    })
+  })
+  describe("3. packFolder Function Tests", function() {
+    let testDir = "testFiles"
+    const relativeTargetZipPath = "testFiles/packed.zip";
+    const targetZipPath = path.join(__dirname, relativeTargetZipPath);
+
+    before(async () => {
+        testDir = await setupTestDirectory()
+    })
+  
+    after(async () => {
+        await cleanupTestDirectory(testDir)
+        // Delete the created zip file at the end of the test
+        try {
+            //await fs.unlink(targetZipPath)
+        } catch (error) {
+            // Error handling if file deletion fails
+            console.error("Failed to delete test zip file:", error)
+        }
+    })
+
+    it("3.1 should correctly pack the test directory into a zip file and have content", async function() {
+        await packFolder(testDir, relativeTargetZipPath, __dirname)
+
+        // Check if the zip file exists
+        let zipExists = await fs.access(targetZipPath).then(() => true).catch(() => false)
+        expect(zipExists).to.be.true
+
+        // Check the content of the zip file
+        const zipData = await fs.readFile(targetZipPath)
+        const zip = await JSZip.loadAsync(zipData)
+        const allFilenames = Object.keys(zip.files)
+
+        // Ensure the zip file contains files
+        expect(allFilenames.length).to.be.greaterThan(0, "The zip file should contain files.")
     })
   })
 })
