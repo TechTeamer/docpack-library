@@ -8,7 +8,6 @@
         "name": "output.pdf",
         "include": true,
         "files": ["sample.md", "sample.adoc"],
-        //TODO: "attachments": "" || ["*.openapi.yml"] <- glob or array of globs, these files will be copied next to the pdf file
         "path": "pdfs",
         "merge": true
       }
@@ -30,7 +29,11 @@
     },
     {
       "type": "youtrack",
-      "source": "path/to/source"
+      "source": "path/to/source",
+      "YOUTRACK_TOKEN": "perm:U3phbmk=.NjQtMzE=.CxvLxXYa9T0gAzqruTLbiHLstpC5z2",
+      "VUER_BUILD_NUMBER": "4",
+      "VUER_TAG_NAME": "raiffeisen",
+      "VUER_TAG": "raiffeisen-1.9.11.4"
     },
     {
       "type": "archive",

@@ -26,6 +26,7 @@
   "dependencies": {
     "archiver": "^7.0.1",
     "asciidoctor": "^2.2.7",
+    "axios": "^1.6.8",
     "dotenv": "^16.4.5",
     "eslint-plugin-import": "^2.29.1",
     "file-type": "^19.0.0",
@@ -33,7 +34,8 @@
     "glob": "^8.1.0",
     "glob-promise": "^6.0.5",
     "marked": "^12.0.1",
-    "node-fetch": "^3.3.2",
+    "mime-types": "^2.1.35",
+    "mock-fs": "^5.2.0",
     "puppeteer": "^22.6.1"
   },
   "devDependencies": {
@@ -51,6 +53,7 @@
     "jszip": "^3.10.1",
     "mocha": "^10.3.0",
     "nodemon": "^3.1.0",
+    "proxyquire": "^2.1.3",
     "sinon": "^17.0.1"
   }
 }
