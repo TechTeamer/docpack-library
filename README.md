@@ -150,3 +150,53 @@ If the `manifest.json` and `outline.json` looks like the example below, then the
 
 ### The `assets` folder
 This folder should contain every file which is referenced in the source files. Currently only images are supported.
+
+## Installation
+You can add this library to your project by executing the following command in you project's folder.
+```bash
+npm install @techteamer/docpack-library
+```
+
+## Usage
+The library can be used in two ways. One is when the result should be written out into a file on the file system. The other one is when the generated should be returned as a `Buffer`.
+
+### Writing result out into a file
+```ts
+import { MarkdownToPDFConverter } from '@techteamer/docpack-library';
+
+const converter = new MarkdownToPDFConverter();
+converter.convertFolder('./inputFolder', './output/genereated.pdf').then(() => {
+  console.log('Conversion completed.');
+});
+```
+
+The example above imports the `MarkdownToPDFConverter` to from the `@techteamer/docpack-library` package, then instantiates it.
+
+Via the previously instantiated instance, it calls the convertFolder method, which accepts two parameters. The first is the `inputFolder` parameter which is a relative or absolute path of the folder which should be converted into a PDF file.
+
+The second one is the `outputFile` parameter which is a relative or absolute path of the file where the generated PDF file should been written out.
+
+When the Promise which was returned from the `MarkdownToPDFConverter.convertFolder` method resolves, it writes out the console the `Conversion completed.` text.
+
+### Receiving result as a `Buffer`
+```ts
+import { MarkdownToPDFConverter } from '@techteamer/docpack-library';
+
+const converter = new MarkdownToPDFConverter();
+converter.convertFolder('./inputFolder').then((buffer) => {
+  console.log('Conversion completed.')
+  fs.writeFile('output/generated.pdf', buffer, (error) => {
+    if (error) {
+      console.error('An error occured during writing out the Buffer into the file:', error);
+      return;
+    }
+    console.log('Buffer successfully saved to the file!');
+  });
+});
+```
+
+The example above imports the `MarkdownToPDFConverter` to from the `@techteamer/docpack-library` package, then instantiates it.
+
+Via the previously instantiated instance, it calls the convertFolder method, which accepts two parameters. The first is the `inputFolder` parameter which is a relative or absolute path of the folder which should be converted into a PDF file.
+
+When the Promise which was returned from the `MarkdownToPDFConverter.convertFolder` method resolves, it tries to write out the buffer resolved by the promise into the `output/generated.pdf` file. If an error occurs during the write out, it prints the `An error occured during writing out the Buffer into the file:` text and the error object to the console. If it can successfully write it out into the file, it prints out the `Buffer successfully saved to the file!` string to the console.
