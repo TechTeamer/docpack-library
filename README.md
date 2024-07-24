@@ -83,7 +83,7 @@ interface DocpackReferenceCollection {
 }
 ```
 
-### definitions/references.json
+### definitions/terms.json
 ```ts
 interface DocpackTerm {
   {
