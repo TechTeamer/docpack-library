@@ -1,0 +1,39 @@
+{
+  "name": "@techteamer/docpack-library",
+  "version": "1.0.0",
+  "description": "FaceKom Documentation Packaging",
+  "type": "module",
+  "main": "build/docpack-library.cjs",
+  "module": "build/docpack-library.mjs",
+  "exports": {
+    ".": {
+      "import": "./build/docpack-library.mjs",
+      "require": "./build/docpack-library.cjs",
+      "types": "./build/docpack-library.d.ts",
+      "default": "./build/docpack-library.mjs"
+    }
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest --run",
+    "lint": "eslint . && echo 'npm run lint: OK'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.7.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^20.14.12",
+    "eslint": "^9.7.0",
+    "rollup": "^4.18.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^7.17.0",
+    "vitest": "^2.0.4"
+  }
+}
