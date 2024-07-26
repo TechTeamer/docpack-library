@@ -1,0 +1,9 @@
+version: '3'
+services:
+  texlive:
+    build: .
+    volumes:
+      - ./tex:/data
+    working_dir: /data
+    stdin_open: true
+    tty: true
