@@ -5,16 +5,16 @@ This package's purpose is to generate a PDF file based on the content of an inpu
 The structure of the input folder should be the following:
 ```
 ./input_folder
-├── assets/
-├── chapters/
-├── definitions/
-│   ├── abbreviations.json
-│   ├── references.json
-│   └── terms.json
-├── cover.md
-├── history.json
-├── manifest.json
-└── outline.json
+|-- assets
+|-- chapters
+|-- cover.md
+|-- definitions
+|   |-- abbreviations.json
+|   |-- references.json
+|   `-- terms.json
+|-- history.json
+|-- manifest.json
+`-- outline.json
 ```
 
 The library should export a class which has a method, which is callable and accepts the path of the input folder as a parameter.
@@ -141,9 +141,9 @@ If the `manifest.json` and `outline.json` looks like the example below, then the
 ##### Content `chapters` folder
 ```
 ./input_folder
-├── chapters/
-│   ├── installation-hu.md
-│   └── installation-en.md
+|-- chapters/
+|   |-- installation-hu.md
+|   `-- installation-en.md
 ```
 
 ### The `assets` folder
