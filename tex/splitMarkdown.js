@@ -67,7 +67,7 @@ function main(inputFilePath, outputDir) {
 }
 
 // Replace with your actual input markdown file path and desired output directory
-const inputFilePath = 'README.md';
+const inputFilePath = 'usermanualhu.md';
 const outputDir = 'output/';
 
 main(inputFilePath, outputDir);
