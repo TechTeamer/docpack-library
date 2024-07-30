@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.9.1",
-    "emoji-regex": "^10.3.0",
-    "node-emoji": "^2.1.3"
+    "emoji-regex": "^10.3.0"
   }
 }
