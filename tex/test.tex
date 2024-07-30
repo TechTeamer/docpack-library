@@ -1,5 +1,5 @@
 \documentclass[12pt, twoside]{report}
-\usepackage[fencedCode,smartEllipses,hybrid]{markdown}
+\usepackage[fencedCode,smartEllipses]{markdown}
 \usepackage[a4paper,
   inner = 25mm,
   outer = 25mm,
@@ -24,7 +24,7 @@
 \usepackage{lipsum}
 \usepackage{fontspec}
 \usepackage{tabularray}
-
+\usepackage{emoji}
 
 \setmainfont{arial}[ %Need such long loading because of luaotfload issue
     Path = /usr/share/fonts/truetype/msttcorefonts/,
@@ -33,12 +33,13 @@
     BoldFont = *bd,
     ItalicFont = *i,
     BoldItalicFont = *bi]
-%\newfontfamily\cyrillicfont{arial}[ %for Cyrillic users
-%    Extension = .ttf ,
-%    UprightFont = *,
-%    BoldFont = *bd,
-%    ItalicFont = *i,
-%    BoldItalicFont = *bi]
+\newfontfamily\cyrillicfont{arial}[ %for Cyrillic users
+    Path = /usr/share/fonts/truetype/msttcorefonts/,
+    Extension = .ttf ,
+    UprightFont = *,
+    BoldFont = *bd,
+    ItalicFont = *i,
+    BoldItalicFont = *bi]
 \onehalfspacing
 
 \BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=bg, hidealllines=true]}
@@ -52,12 +53,12 @@
 \pagestyle{fancy}
 
 \fancyhf{}
-\fancyfoot[LO,RE]{\thepage}
+\fancyfoot[RE,LO]{\thepage}
 \fancyfoot[C]{\includegraphics[width=1.7cm]{images/footer}}
 \renewcommand{\headrulewidth}{0pt}
 \fancypagestyle{plain}{
   \fancyhf{}
-  \fancyfoot[LO,RE]{\thepage}
+  \fancyfoot[RE,LO]{\thepage}
   \fancyfoot[C]{\includegraphics[width=1.7cm]{images/footer}}
   \renewcommand{\headrulewidth}{0pt}
 }
@@ -97,96 +98,123 @@
   \setcounter{page}{1}
   \tableofcontents
 
+  \markdownInput{output/text_segment_0.md}
+
   \begin{sloppypar}
   % \input{output/usermanualhu.md}
   % \markdownInput{usermanualhu.md}
   \end{sloppypar}
-  \lipsum[2-4]
 
-    \begin{longtblr}[]{
-      colspec = {|X[-1]|X|X|X|X|},
-      row{1} = {c,m,gray9},
-      row{even} = {c,m},
-      row{odd} = {c,m},
-      rowhead = 1
-    }
-      \hline
-      \# & Esemény kategória & Esemény & Leírás & Tárolt paraméterek \\ \hline
-      1 & system & exit & Rendszer leállása & posix signal \\ \hline
-      2 & system & start & Rendszer elindulása & rendszer verziója \\ \hline
-      3 & openhour & updated & Az általános nyitvatartás megváltozott & az új nyitvatartási rend \\ \hline
-      4 & openhour & exceptioncreated & Új kivételes nyitva- vagy zárva tartás került a rendszerbe & az új nyitva- vagy zárva tartás adatai \\ \hline
-      5 & openhour & exceptiondeleted & Kivételes nyitva- vagy zárva tartás törölve lett & a törölt nyitva- vagy zárva tartás adatai \\ \hline
-      6 & user & login & Felhasználó bejelentkezett & a felhasználó user neve és az aktuális jogosultságai \\ \hline
-      7 & user & logout & Felhasználó kijelentkezett & a felhasználó user neve \\ \hline
-      8 & user & role-switch & Egy felhasználó szerepkört váltott & felhasználó szerepköre, felhasználóneve, bejelentkezési mód \\ \hline
-      9 & user & auth.unknown\_user & Bejelentkezési kísérlet nem létező felhasználóval & a nem létező felhasználó neve \\ \hline
-      10 & user & auth.wrong\_password & Bejelentkezési kísérlet rossz jelszóval & a felhasználó neve \\ \hline
-      11 & user & auth.expired\_password & A felhasználó sikeresen belépett de a jelszava lejárt & felhasználó felhasználóneve \\ \hline
-      12 & user & auth.no\_main\_role & A felhasználónak nincs megfelelő szerepköre & felhasználó felhasználóneve \\ \hline
-      13 & user & auth.password\_success & Felhasználói jelszó sikeres változása & felhasználó id-ja, neve \\ \hline
-      14 & user & auth.sms\_failed & SMS küldés sikertelen & felhasználó neve \\ \hline
-      15 & user & auth.sms\_success & SMS küldés sikeres & felhasználó neve \\ \hline
-      16 & user & auth.session\_expired & Lejárt session érzékelése & a felhasználó neve \\ \hline
-      17 & user & auth.session\_destroy & Session megsemmisítése & a felhasználó neve \\ \hline
-      18 & user & user.auth.throttled & A felhasználó ideiglenesen ki lett tiltva & ip cím, bejelentkezési mód \\ \hline
-      19 & user & user.throttled & A felhasználó ideiglenesen ki lett tiltva & ip cím, bejelentkezési mód \\ \hline
-      20 & user & auth.not\_authorized & Egy nem engedélyezett user be próbált lépni & felhasználó felhasználóneve \\ \hline
-      21 & user & auth.disabled & Egy letiltott felhasználó be próbált lépni & felhasználó id-ja és neve \\ \hline
-      22 & user & passwordchanged & Felhasználói jelszó megváltozott & a felhasználó id-ja és neve \\ \hline
-      23 & user & passwordreseted & Felhasználó jelszavát resetelték & resetet végző felhasználó, a resetelt felhasználó \\ \hline
-      24 & user & created & Új felhasználó lett létrehozva & az új felhasználó id-ja, neve, státusza, és az aktuális jogosultságai \\ \hline
-      25 & user & updated & Felhasználó adatai megváltoztak & a felhasználó id-ja, neve, státusza, vezeték és kereszt neve, valamint email címe \\ \hline
-      26 & user & batch.import & Felhasználói adatok batch importálása & - \\ \hline
-      27 & user & changed & Felhasználó adatai megváltoztak & a felhasználó id-ja, neve, státusza, vezeték és kereszt neve, valamint email címe \\ \hline
-      28 & user & changed.rights & Felhasználó jogai megváltoztak & felhasználó id-ja, neve, státusza, és az aktuális jogosultságai \\ \hline
-      29 & user & enabled & Egy felhasználó aktiválva lett & felhasználó id-ja és neve \\ \hline
-      30 & user & disabled & Egy felhasználó tiltva lett & felhasználó id-ja és neve \\ \hline
-      31 & system & disaster.on & Vészhelyzeti rendszer leállás kezdete & - \\ \hline
-      32 & system & disaster.off & Vészhelyzeti rendszer leállás vége & - \\ \hline
-      33 & report & accessed & Ügyfél adat hozzáférés & oldal URL-je, ügyfél id-ja, szoba id-ja, önkiszolgáló szoba id-ja, ügymenet id-ja, visszahívási kérelem id-ja, email log id-ja, feladat id-ja \\ \hline
-      34 & report & downloaded & Dokumentum letöltés & dokumentum id-ja, ügyfél id-ja, siker státusza \\ \hline
-      35 & room & downloaded & A szoba le lett töltve & szoba id-ja \\ \hline
-      36 & room & rawvideodownloaded & A szoba nyers videofájljai le lettek töltve & szoba id-ja \\ \hline
-      37 & room & audiodownloaded & A szoba hangsávjának letöltése & szoba id-ja \\ \hline
-      38 & room & deleted.record & Egy felvétel állomány törölve lett & szoba id-ja, fájl neve és a törlés sikerességének / sikertelenségének eredménye \\ \hline
-      39 & room & deleted.screenshot & Egy képernyő kép állomány törölve lett & szoba id-ja, csatolmány id-ja és a törlés sikerességének / sikertelenségének eredménye \\ \hline
-      40 & room & deleted & A szoba törölve lett & szoba id-ja, fájlok, törlés oka, siker státusza \\ \hline
-      41 & room & archived & A szoba archiválva lett & szoba id-ja, az archiválás sikerességének / sikertelenségének eredménye, érintett fájlok \\ \hline
-      42 & room & restored & A szoba vissza lett állítva (az archivált állapotból) & szoba id-ja, az visszaállítás sikerességének / sikertelenségének eredménye, érintett fájlok \\ \hline
-      43 & room & reconverted & A szoba vissza lett állítva (a törölt állapotból) & szoba id-ja, a visszaállítás sikerességének / sikertelenségének eredménye, érintett fájlok \\ \hline
-      44 & selfServiceRoom & reconverted & Az önkiszolgáló szoba vissza lett állítva & szoba id-ja \\ \hline
-      45 & selfServiceRoom & archived & Az önkiszolgáló szoba archiválva lett & szoba id-ja \\ \hline
-      46 & selfServiceRoom & restored & Az önkiszolgáló szoba vissza lett állítva (az archivált állapotból) & szoba id-ja \\ \hline
-      47 & selfServiceRoom & deleted & Az önkiszolgáló szoba törölve lett & szoba id-ja \\ \hline
-      48 & selfServiceRoom & downloaded & Az önkiszolgáló szoba le lett töltve & szoba id-ja \\ \hline
-      49 & flow & archived & A folyamat archiválva lett & folyamat id-ja \\ \hline
-      50 & flow & restored & A folyamat vissza lett állítva (az archivált állapotból) & folyamat id-ja \\ \hline
-      51 & flow & draft.created & Új folyamatvázlat létrehozva & folyamat vázlat id-ja \\ \hline
-      52 & flow & published & A folyamat közzétéve lett & folyamat id-ja \\ \hline
-      53 & flow & cleared & A folyamat törölve lett & folyamat id-ja \\ \hline
-      54 & settings & archive & Beállítások archiválása & beállítások id-ja \\ \hline
-      55 & settings & viewed & Beállítások megtekintése & beállítások id-ja \\ \hline
-      56 & settings & exported & Beállítások exportálása & beállítások id-ja \\ \hline
-      57 & settings & imported & Beállítások importálása & beállítások id-ja \\ \hline
-      58 & document & deleted & Dokumentum törölve lett & dokumentum id-ja \\ \hline
-      59 & systemdocument & deleted & Rendszerdokumentum törölve lett & dokumentum id-ja \\ \hline
-      60 & systemdocument & accessed & Rendszerdokumentum hozzáférve lett & dokumentum id-ja \\ \hline
-      61 & systemdocument & uploaded & Rendszerdokumentum feltöltve lett & dokumentum id-ja \\ \hline
-      62 & systemdocument & downloaded & Rendszerdokumentum letöltve lett & dokumentum id-ja \\ \hline
-      63 & systemdocument & updated & Rendszerdokumentum frissítve lett & dokumentum id-ja \\ \hline
-      64 & flow & reset & A folyamat alaphelyzetbe állítva & folyamat id-ja \\ \hline
-      65 & encrypt & failed & Titkosítási művelet sikertelen & - \\ \hline
-      66 & timestamp & failed & Időbélyegzés sikertelen & - \\ \hline
-      67 & callcenter & changed & Call center beállítások megváltoztak & call center id-ja \\ \hline
-      68 & cronjob & run & Cron feladat futtatása & cronjob id-ja \\ \hline
-      69 & cronjob & start & Cron feladat elindítása & cronjob id-ja \\ \hline
-      70 & cronjob & stop & Cron feladat leállítása & cronjob id-ja \\ \hline
-      71 & customer & deleted & Ügyfél törölve lett & ügyfél id-ja \\ \hline
-      72 & access & failed & Hozzáférés sikertelen & - \\ \hline
-      73 & user & webAuthnCredential.create & WebAuthn credential létrehozva & felhasználó id-ja, credential id-ja \\ \hline
-      74 & user & webAuthnCredential.delete & WebAuthn credential törölve & felhasználó id-ja, credential id-ja \\ \hline
-    \end{longtblr}
+  \emoji{sweat-smile}
+  понедељак уторак среда четвртак петак субота недеља
+
+  ponedeljak utorak sreda četvrtak petak subota nedelja
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/lisan al gaib}
+    \caption{Lisa al gaib}
+    \label{fig:lisa}
+  \end{figure}
+
+  \begin{markdown}
+  A(z) \ref{fig:lisa}. ábrán látható
+  \end{markdown}
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{images/asd}
+    \caption{Mermaid}
+    \label{fig:mermaid}
+  \end{figure}
+
+
+%  \lipsum[2-4]
+%
+%    \begin{longtblr}[]{
+%      colspec = {|X[-1]|X|X|X|X|},
+%      row{1} = {c,m,gray9},
+%      row{even} = {c,m},
+%      row{odd} = {c,m},
+%      rowhead = 1
+%    }
+%      \hline
+%      \# & Esemény kategória & Esemény & Leírás & Tárolt paraméterek \\ \hline
+%      1 & system & exit & Rendszer leállása & posix signal \\ \hline
+%      2 & system & start & Rendszer elindulása & rendszer verziója \\ \hline
+%      3 & openhour & updated & Az általános nyitvatartás megváltozott & az új nyitvatartási rend \\ \hline
+%      4 & openhour & exceptioncreated & Új kivételes nyitva- vagy zárva tartás került a rendszerbe & az új nyitva- vagy zárva tartás adatai \\ \hline
+%      5 & openhour & exceptiondeleted & Kivételes nyitva- vagy zárva tartás törölve lett & a törölt nyitva- vagy zárva tartás adatai \\ \hline
+%      6 & user & login & Felhasználó bejelentkezett & a felhasználó user neve és az aktuális jogosultságai \\ \hline
+%      7 & user & logout & Felhasználó kijelentkezett & a felhasználó user neve \\ \hline
+%      8 & user & role-switch & Egy felhasználó szerepkört váltott & felhasználó szerepköre, felhasználóneve, bejelentkezési mód \\ \hline
+%      9 & user & auth.unknown\_user & Bejelentkezési kísérlet nem létező felhasználóval & a nem létező felhasználó neve \\ \hline
+%      10 & user & auth.wrong\_password & Bejelentkezési kísérlet rossz jelszóval & a felhasználó neve \\ \hline
+%      11 & user & auth.expired\_password & A felhasználó sikeresen belépett de a jelszava lejárt & felhasználó felhasználóneve \\ \hline
+%      12 & user & auth.no\_main\_role & A felhasználónak nincs megfelelő szerepköre & felhasználó felhasználóneve \\ \hline
+%      13 & user & auth.password\_success & Felhasználói jelszó sikeres változása & felhasználó id-ja, neve \\ \hline
+%      14 & user & auth.sms\_failed & SMS küldés sikertelen & felhasználó neve \\ \hline
+%      15 & user & auth.sms\_success & SMS küldés sikeres & felhasználó neve \\ \hline
+%      16 & user & auth.session\_expired & Lejárt session érzékelése & a felhasználó neve \\ \hline
+%      17 & user & auth.session\_destroy & Session megsemmisítése & a felhasználó neve \\ \hline
+%      18 & user & user.auth.throttled & A felhasználó ideiglenesen ki lett tiltva & ip cím, bejelentkezési mód \\ \hline
+%      19 & user & user.throttled & A felhasználó ideiglenesen ki lett tiltva & ip cím, bejelentkezési mód \\ \hline
+%      20 & user & auth.not\_authorized & Egy nem engedélyezett user be próbált lépni & felhasználó felhasználóneve \\ \hline
+%      21 & user & auth.disabled & Egy letiltott felhasználó be próbált lépni & felhasználó id-ja és neve \\ \hline
+%      22 & user & passwordchanged & Felhasználói jelszó megváltozott & a felhasználó id-ja és neve \\ \hline
+%      23 & user & passwordreseted & Felhasználó jelszavát resetelték & resetet végző felhasználó, a resetelt felhasználó \\ \hline
+%      24 & user & created & Új felhasználó lett létrehozva & az új felhasználó id-ja, neve, státusza, és az aktuális jogosultságai \\ \hline
+%      25 & user & updated & Felhasználó adatai megváltoztak & a felhasználó id-ja, neve, státusza, vezeték és kereszt neve, valamint email címe \\ \hline
+%      26 & user & batch.import & Felhasználói adatok batch importálása & - \\ \hline
+%      27 & user & changed & Felhasználó adatai megváltoztak & a felhasználó id-ja, neve, státusza, vezeték és kereszt neve, valamint email címe \\ \hline
+%      28 & user & changed.rights & Felhasználó jogai megváltoztak & felhasználó id-ja, neve, státusza, és az aktuális jogosultságai \\ \hline
+%      29 & user & enabled & Egy felhasználó aktiválva lett & felhasználó id-ja és neve \\ \hline
+%      30 & user & disabled & Egy felhasználó tiltva lett & felhasználó id-ja és neve \\ \hline
+%      31 & system & disaster.on & Vészhelyzeti rendszer leállás kezdete & - \\ \hline
+%      32 & system & disaster.off & Vészhelyzeti rendszer leállás vége & - \\ \hline
+%      33 & report & accessed & Ügyfél adat hozzáférés & oldal URL-je, ügyfél id-ja, szoba id-ja, önkiszolgáló szoba id-ja, ügymenet id-ja, visszahívási kérelem id-ja, email log id-ja, feladat id-ja \\ \hline
+%      34 & report & downloaded & Dokumentum letöltés & dokumentum id-ja, ügyfél id-ja, siker státusza \\ \hline
+%      35 & room & downloaded & A szoba le lett töltve & szoba id-ja \\ \hline
+%      36 & room & rawvideodownloaded & A szoba nyers videofájljai le lettek töltve & szoba id-ja \\ \hline
+%      37 & room & audiodownloaded & A szoba hangsávjának letöltése & szoba id-ja \\ \hline
+%      38 & room & deleted.record & Egy felvétel állomány törölve lett & szoba id-ja, fájl neve és a törlés sikerességének / sikertelenségének eredménye \\ \hline
+%      39 & room & deleted.screenshot & Egy képernyő kép állomány törölve lett & szoba id-ja, csatolmány id-ja és a törlés sikerességének / sikertelenségének eredménye \\ \hline
+%      40 & room & deleted & A szoba törölve lett & szoba id-ja, fájlok, törlés oka, siker státusza \\ \hline
+%      41 & room & archived & A szoba archiválva lett & szoba id-ja, az archiválás sikerességének / sikertelenségének eredménye, érintett fájlok \\ \hline
+%      42 & room & restored & A szoba vissza lett állítva (az archivált állapotból) & szoba id-ja, az visszaállítás sikerességének / sikertelenségének eredménye, érintett fájlok \\ \hline
+%      43 & room & reconverted & A szoba vissza lett állítva (a törölt állapotból) & szoba id-ja, a visszaállítás sikerességének / sikertelenségének eredménye, érintett fájlok \\ \hline
+%      44 & selfServiceRoom & reconverted & Az önkiszolgáló szoba vissza lett állítva & szoba id-ja \\ \hline
+%      45 & selfServiceRoom & archived & Az önkiszolgáló szoba archiválva lett & szoba id-ja \\ \hline
+%      46 & selfServiceRoom & restored & Az önkiszolgáló szoba vissza lett állítva (az archivált állapotból) & szoba id-ja \\ \hline
+%      47 & selfServiceRoom & deleted & Az önkiszolgáló szoba törölve lett & szoba id-ja \\ \hline
+%      48 & selfServiceRoom & downloaded & Az önkiszolgáló szoba le lett töltve & szoba id-ja \\ \hline
+%      49 & flow & archived & A folyamat archiválva lett & folyamat id-ja \\ \hline
+%      50 & flow & restored & A folyamat vissza lett állítva (az archivált állapotból) & folyamat id-ja \\ \hline
+%      51 & flow & draft.created & Új folyamatvázlat létrehozva & folyamat vázlat id-ja \\ \hline
+%      52 & flow & published & A folyamat közzétéve lett & folyamat id-ja \\ \hline
+%      53 & flow & cleared & A folyamat törölve lett & folyamat id-ja \\ \hline
+%      54 & settings & archive & Beállítások archiválása & beállítások id-ja \\ \hline
+%      55 & settings & viewed & Beállítások megtekintése & beállítások id-ja \\ \hline
+%      56 & settings & exported & Beállítások exportálása & beállítások id-ja \\ \hline
+%      57 & settings & imported & Beállítások importálása & beállítások id-ja \\ \hline
+%      58 & document & deleted & Dokumentum törölve lett & dokumentum id-ja \\ \hline
+%      59 & systemdocument & deleted & Rendszerdokumentum törölve lett & dokumentum id-ja \\ \hline
+%      60 & systemdocument & accessed & Rendszerdokumentum hozzáférve lett & dokumentum id-ja \\ \hline
+%      61 & systemdocument & uploaded & Rendszerdokumentum feltöltve lett & dokumentum id-ja \\ \hline
+%      62 & systemdocument & downloaded & Rendszerdokumentum letöltve lett & dokumentum id-ja \\ \hline
+%      63 & systemdocument & updated & Rendszerdokumentum frissítve lett & dokumentum id-ja \\ \hline
+%      64 & flow & reset & A folyamat alaphelyzetbe állítva & folyamat id-ja \\ \hline
+%      65 & encrypt & failed & Titkosítási művelet sikertelen & - \\ \hline
+%      66 & timestamp & failed & Időbélyegzés sikertelen & - \\ \hline
+%      67 & callcenter & changed & Call center beállítások megváltoztak & call center id-ja \\ \hline
+%      68 & cronjob & run & Cron feladat futtatása & cronjob id-ja \\ \hline
+%      69 & cronjob & start & Cron feladat elindítása & cronjob id-ja \\ \hline
+%      70 & cronjob & stop & Cron feladat leállítása & cronjob id-ja \\ \hline
+%      71 & customer & deleted & Ügyfél törölve lett & ügyfél id-ja \\ \hline
+%      72 & access & failed & Hozzáférés sikertelen & - \\ \hline
+%      73 & user & webAuthnCredential.create & WebAuthn credential létrehozva & felhasználó id-ja, credential id-ja \\ \hline
+%      74 & user & webAuthnCredential.delete & WebAuthn credential törölve & felhasználó id-ja, credential id-ja \\ \hline
+%    \end{longtblr}
 
 %  \include{readme}
 \end{document}
