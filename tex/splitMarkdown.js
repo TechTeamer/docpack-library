@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import {writeFileSync} from "node:fs";
 
 // Function to read the markdown file
 function readMarkdownFile(filePath) {
@@ -12,6 +11,8 @@ function writeFile(filePath, content) {
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
+// Function to replace ```{lang} with \begin{minted}[breaklines]{lang} and closing ``` with \end{minted}
+// If no language is specified, defaults to "shell"
 function replaceCodeBlockWithMinted(segment) {
   const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
   return segment.replace(codeBlockRegex, (match, lang, code) => {
@@ -20,37 +21,91 @@ function replaceCodeBlockWithMinted(segment) {
   });
 }
 
-/**
- *
- * @param filenames {string[]}
- * @returns {string}
- */
-function generateTex(filenames) {
-  const markTemp = (fname) => `\\markdownInput{${fname}}`;
-  const textTemp = (fname) => `\\input{${fname}}`;
-  return filenames.map(name => name.endsWith(".md") ? markTemp(name):textTemp(name)).join("\n")
-}
+// Function to split markdown content line by line
+function splitMarkdownContent(content) {
+  const lines = content.split('\n');
+  const segments = [];
 
-// Function to split markdown content and save to separate files
-function splitMarkdownContent(content, inpFileName, outputDir) {
-  const codeBlockRegex = /(```[\s\S]*?```)/g;
-  let segments = content.split(codeBlockRegex);
-  const paths = []
-  let counter = 0;
-  segments.forEach(segment => {
-    let fileName;
-    if (segment.startsWith('```')) {
-      segment = replaceCodeBlockWithMinted(segment);
-      fileName = `code_block_${counter}.tex`;
+  let currentSegment = [];
+  let currentType = 'text';
+  let insideCodeBlock = false;
+  let insideTable = false;
+  let codeLang = '';
+
+  lines.forEach(line => {
+    if (line.startsWith('```')) {
+      if (insideCodeBlock) {
+        // End of code block
+        currentSegment.push(line);
+        segments.push({
+          type: 'code',
+          content: replaceCodeBlockWithMinted(currentSegment.join('\n'))
+        });
+        currentSegment = [];
+        insideCodeBlock = false;
+      } else {
+        // Start of code block
+        if (currentSegment.length > 0) {
+          segments.push({
+            type: currentType,
+            content: currentSegment.join('\n')
+          });
+          currentSegment = [];
+        }
+        insideCodeBlock = true;
+        codeLang = line.match(/```(\w*)/)[1] || 'shell';
+        currentSegment.push(line);
+      }
+    } else if (line.startsWith('![')) {
+      // Image line
+      if (currentSegment.length > 0) {
+        segments.push({
+          type: currentType,
+          content: currentSegment.join('\n')
+        });
+        currentSegment = [];
+      }
+      segments.push({
+        type: 'image',
+        content: line
+      });
+      currentType = 'text';
+    } else if (line.startsWith('|') && line.includes('|')) {
+      // Table line
+      if (!insideTable) {
+        if (currentSegment.length > 0) {
+          segments.push({
+            type: currentType,
+            content: currentSegment.join('\n')
+          });
+          currentSegment = [];
+        }
+        insideTable = true;
+      }
+      currentSegment.push(line);
     } else {
-      fileName = `text_segment_${counter}.md`;
+      // Regular text line
+      if (insideTable) {
+        segments.push({
+          type: 'table',
+          content: currentSegment.join('\n')
+        });
+        currentSegment = [];
+        insideTable = false;
+      }
+      currentSegment.push(line);
+      currentType = 'text';
     }
-    const fPath = path.join(outputDir, inpFileName, fileName.replace(".tex", ""))
-    paths.push(fPath)
-    writeFile(path.join(outputDir, inpFileName, fileName), segment);
-    counter++;
   });
-  writeFileSync(path.join(outputDir, inpFileName + ".tex"), generateTex(paths))
+
+  if (currentSegment.length > 0) {
+    segments.push({
+      type: insideTable ? 'table' : insideCodeBlock ? 'code' : currentType,
+      content: currentSegment.join('\n')
+    });
+  }
+
+  return segments;
 }
 
 // Main function to execute the splitting process
@@ -58,16 +113,27 @@ function main(inputFilePath, outputDir) {
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
   }
-  const z = path.join(outputDir,path.basename(inputFilePath))
-  if (!fs.existsSync(z)) {
-    fs.mkdirSync(z);
-  }
+
   const content = readMarkdownFile(inputFilePath);
-  splitMarkdownContent(content, path.basename(inputFilePath), outputDir);
+  const segments = splitMarkdownContent(content);
+
+  segments.forEach((segment, index) => {
+    let fileName;
+    if (segment.type === 'code') {
+      fileName = `code_block_${index}.md`;
+    } else if (segment.type === 'image') {
+      fileName = `image_${index}.md`;
+    } else if (segment.type === 'table') {
+      fileName = `table_${index}.md`;
+    } else {
+      fileName = `text_segment_${index}.md`;
+    }
+    writeFile(path.join(outputDir, fileName), segment.content);
+  });
 }
 
 // Replace with your actual input markdown file path and desired output directory
-const inputFilePath = 'usermanualhu.md';
-const outputDir = 'output/';
+const inputFilePath = 'input.md';
+const outputDir = 'output';
 
 main(inputFilePath, outputDir);

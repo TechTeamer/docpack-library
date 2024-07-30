@@ -35,5 +35,10 @@
     "typescript": "^5.5.4",
     "typescript-eslint": "^7.17.0",
     "vitest": "^2.0.4"
+  },
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "^10.9.1",
+    "emoji-regex": "^10.3.0",
+    "node-emoji": "^2.1.3"
   }
 }
