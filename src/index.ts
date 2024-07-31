@@ -1,8 +1,6 @@
-export function addTwo(input: number): number {
-  return input + 2;
-}
+import {formatEmojis} from "./emoji.formatter.ts";
 
-
-console.log("Hello world");
+const emojiString = "😀😂😍🥺😎🤔😭😜👍🎉";
+console.log(formatEmojis(emojiString));
 
 
