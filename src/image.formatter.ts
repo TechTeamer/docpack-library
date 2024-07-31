@@ -17,7 +17,7 @@ function parseMarkdownImage(markdown: string): MarkdownImage {
       title: match[3] || null  // Optional title inside the quotes (or null if not provided)
     };
   } else {
-    throw new Error(`Invalid Markdown image syntax: "${regex}"`);
+    throw new Error(`Invalid Markdown image syntax: "${markdown}"`);
   }
 }
 

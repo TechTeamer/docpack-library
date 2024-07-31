@@ -4,7 +4,7 @@ import {formatImage} from "../src/image.formatter";
 
 describe("Image formatter tests",  () => {
 
-  test("correct input",  () => {
+  test("correct markdown image input generates correct output",  () => {
     const input = `![Hello](assets/hello.png "hello world")`
     const result = formatImage(input)
     const expectedResult = `\\begin{figure}[H]
@@ -15,17 +15,23 @@ describe("Image formatter tests",  () => {
     expect(result).toBe(expectedResult)
   })
 
-  test("incorrect text", () => {
+  test("incorrect input with spaces in file name throws error",  () => {
+    const input = `![Hello](assets/hello world.png "hello world")`
+    expect(() => formatImage(input)).toThrow()
+  })
+
+
+  test("not markdown image input throws error", () => {
     const input = "This is not an image line";
     expect(() => formatImage(input)).toThrow();
   })
 
-  test("incorrect image format", () => {
+  test("incorrect markdown image with <> around the file name throws error", () => {
     const input = `![Hello](<assets/hello.png> "hello world")`
     expect(() => formatImage(input)).toThrow()
   })
 
-  test("custom size format", () => {
+  test("custom size format will generate correct output", () => {
     const input = `![Hello](assets/hello.png "hello world")`
     const result = formatImage(input, "10cm")
     const expectedResult = `\\begin{figure}[H]
@@ -36,12 +42,12 @@ describe("Image formatter tests",  () => {
     expect(result).toBe(expectedResult)
   })
 
-  test("incorrect size format", () => {
+  test("incorrect size format will throw error", () => {
     const input = `![Hello](assets/hello.png "hello world")`
     expect(() => formatImage(input, "yeeet")).toThrow()
   })
 
-  test("title", () => {
+  test("markdown title is used in caption when provided", () => {
     const input = `![Hello](assets/hello.png "Title")`
     const result = formatImage(input, "10cm")
     const expectedResult = `\\begin{figure}[H]
@@ -52,7 +58,7 @@ describe("Image formatter tests",  () => {
     expect(result).toBe(expectedResult)
   })
 
-  test("alt text", () => {
+  test("markdown alt text is used in caption when no title provided", () => {
     const input = `![Hello](assets/hello.png)`
     const result = formatImage(input, "10cm")
     const expectedResult = `\\begin{figure}[H]
@@ -63,7 +69,7 @@ describe("Image formatter tests",  () => {
     expect(result).toBe(expectedResult)
   })
 
-  test("no title no text", () => {
+  test("no text in caption when no title and no alt text provided", () => {
     const input = `![](assets/hello.png)`
     const result = formatImage(input, "10cm")
     const expectedResult = `\\begin{figure}[H]
