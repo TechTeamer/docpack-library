@@ -18,6 +18,10 @@ function find(str: string): string {
   return allEmojis.find(emoji => emoji.emoji === str)?.aliases.at(0) ?? "";
 }
 
+/**
+ * Formats emojis to Latex compatible format
+ * @param str Input text
+ */
 export function formatEmojis(str: string): string {
   const regex = emojiRegex()
   let res = str;
@@ -28,6 +32,11 @@ export function formatEmojis(str: string): string {
   return res.replaceAll("_", "-");
 }
 
+
+/**
+ * Removes emojis form text
+ * @param str Input text
+ */
 export function cleanEmojis(str: string): string {
   const regex = emojiRegex()
   let res = str;
