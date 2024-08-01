@@ -1,17 +1,25 @@
 // Check https://github.com/lvjr/tabularray for the full specification!
 
-import {type HTMLElement} from 'node-html-parser';
+import {type HTMLElement, parse} from 'node-html-parser';
+import {marked} from 'marked';
 
 type HorizontalAlignment = "left" | "center" | "right" | "justify";
 type VerticalAlignment = "top" | "middle" | "bottom" | "head" | "foot";
 
-interface Column {
+interface RowColOption {
+  hAlign?: HorizontalAlignment | string;
+  vAlign?: VerticalAlignment | string;
+  color?: string;
+  extra?: { [key: string]: string }
+}
+
+interface ColumnSpecItem {
   type: string;
   size: number;
 }
 
 interface ColumnSpec {
-  columns: Column[]
+  columns: ColumnSpecItem[]
 }
 
 interface RowSpec {
@@ -19,19 +27,20 @@ interface RowSpec {
 }
 
 interface TableConfiguration {
-  columnSpec: ColumnSpec,
-  rowSpec: RowSpec,
-  env: string;
+  columnSpec: ColumnSpec;
+  rowSpec?: RowSpec;
+  columns: {
+    vAlign?: VerticalAlignment,
+    extra?: { [key: string]: string; }
+  };
+  env: "tblr" | "longtblr";
   headerRowCount: number,
   footerRowCount: number,
-  hAlign: HorizontalAlignment;
-  vAlign: VerticalAlignment;
+  column?: {
+    [key: string]: RowColOption;
+  };
   row?: {
-    [key: string]: {
-      hAlign?: HorizontalAlignment,
-      vAlign?: VerticalAlignment,
-      color?: string
-    }
+    [key: string]: RowColOption;
   }
 }
 
@@ -105,17 +114,91 @@ function getTableColumnAlignments(table: HTMLElement): string[] {
     .find(n => n.tagName?.toLowerCase() === 'thead') as HTMLElement
   const headRow = getChildren(thead).find(n => n.tagName?.toLowerCase() === 'tr') as HTMLElement
   const headCol = getChildren(headRow).filter(n => n.tagName?.toLowerCase() === 'th')
-  return  headCol.map(n => n.attributes.align ?? 'left').map(s => s[0]);
+  return headCol.map(n => n.attributes.align ?? 'left');
 }
 
-export function generateTableConfiguration(str: string): string {
-  return "";
+function generateAlignments(alignments: string[]): { [key: string]: RowColOption } {
+  const data: { [key: string]: RowColOption } = {}
+
+  for (let i = 0; i < alignments.length; i++) {
+    data[`${i + 1}`] = {
+      hAlign: alignments[i]
+    };
+  }
+
+  return data;
 }
 
-export function generateTableData(str: string): string {
-  return str;
+export function generateTableConfiguration(table: HTMLElement): TableConfiguration {
+  const alignments = getTableColumnAlignments(table)
+  return {
+    env: "longtblr",
+    columnSpec: {
+      columns: Array(alignments.length).fill("").map(() => ({
+        type: "X",
+        size: 1
+      }))
+    },
+    columns: {
+      vAlign: "middle",
+    },
+    column: generateAlignments(alignments),
+    row: {
+      "1": {
+        hAlign: "center",
+        color: "gray9"
+      }
+    },
+    footerRowCount: 0,
+    headerRowCount: 1
+  };
 }
 
-export function renderTable(tableConfig: TableConfiguration): string {
-  return "";
+function formatRow(row: { [p: string]: RowColOption }): string[] {
+  return Object.entries(row).map(([k, v]) => {
+    const vAlign = v.vAlign ? v.vAlign[0] : undefined;
+    const hAlign = v.hAlign ? v.hAlign[0] : undefined;
+    const options = [vAlign, hAlign, v.color, obj2strArr(v.extra)].flat().filter(x => !!x);
+    return `row{${k}}={${options.join(",")}}`
+  });
+}
+
+function formatColSpec(colspec: ColumnSpec) {
+  return "colspec={|" + colspec.columns.map(col => `${col.type}[${col.size}]`).join("|") + "|}"
+}
+
+function generateTableData(table: HTMLElement): string {
+  return prettyPrint(table);
+}
+
+function obj2strArr(obj: any): string[] {
+  return Object.entries(obj ?? {}).map(([key, value]) => `${key}=${value}`)
+}
+
+function formatColumns(columns: { vAlign?: VerticalAlignment; extra?: { [p: string]: string } }): string {
+  const colStr = [
+    (columns.vAlign ?? "justify")[0],
+    obj2strArr(columns.extra)
+  ].flat().join(",");
+  return `columns={${colStr}}`
+}
+
+function generateTableEnv(tableConfig: TableConfiguration): { begin: string, end: string } {
+  const colSpec = formatColSpec(tableConfig.columnSpec);
+  const columns = formatColumns(tableConfig.columns);
+  const rowHead = `rowhead=${tableConfig.headerRowCount}`;
+  const rowFoot = `rowfoot=${tableConfig.footerRowCount}`;
+  const specificRows = formatRow(tableConfig.row ?? {}).join(",");
+  const envStr = [colSpec, columns, specificRows, rowHead, rowFoot].join(",")
+  const begin = `\\begin{${tableConfig.env}}[]{${envStr}}`;
+  const end = `\\end{${tableConfig.env}}`;
+  return {begin, end};
+}
+
+export function generateTable(str: string, tableConfig?: TableConfiguration) {
+  const table = parse(marked.parse(str) as string).firstChild as HTMLElement;
+  const config = tableConfig ?? generateTableConfiguration(table);
+  const env = generateTableEnv(config);
+  const content = generateTableData(table);
+  return `${env.begin}\n${content}${env.end}`;
 }

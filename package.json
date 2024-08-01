@@ -40,6 +40,7 @@
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.9.1",
     "emoji-regex": "^10.3.0",
+    "marked": "^13.0.3",
     "node-html-parser": "^6.1.13",
     "uuid": "^10.0.0"
   }
