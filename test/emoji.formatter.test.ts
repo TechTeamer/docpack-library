@@ -3,9 +3,9 @@ import {describe, expect, test} from "vitest";
 
 describe("Emoji conversations", () => {
   test("It can replace one emoji", () => {
-    const input = "Test 😅";
+    const input = "Test 😅.";
     const result = formatEmojis(input)
-    const expectedResult = "Test \\emoji{sweat-smile}"
+    const expectedResult = "Test \\emoji{sweat-smile}."
     expect(result).toBe(expectedResult)
   })
 

@@ -1,6 +1,6 @@
 import emojiRegex from "emoji-regex";
 // If something is not showing up, check the https://github.com/stone-zeng/latex-emoji repo!
-import emojis from "./data/emoji.json" with { type: "json" };
+import emojis from "./data/emoji.json"; // with { type: "json" };
 
 interface EmojiStruct {
   emoji: string;
@@ -42,7 +42,6 @@ export function cleanEmojis(str: string): string {
   let res = str;
   for (const match of str.matchAll(regex)) {
     const e = match[0]
-    const z = find(e)
     res = res.replaceAll(e, "")
   }
   return res.replace(/\s{2,}/g, " ");
