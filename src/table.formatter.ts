@@ -96,7 +96,7 @@ function prettyPrint(node: HTMLElement, result: string = ''): string {
     if (bodyRow.length > 0) {
       result += " \\\\\n\\hline\n"
     }
-    bodyRow.forEach((n, index, array) => {
+    bodyRow.forEach((n) => {
       result += getChildren(n)
         .filter(n => n.tagName?.toLowerCase() === 'td')
         .map(n => formatChildren(n)).join(" & ")
@@ -171,7 +171,7 @@ function generateTableData(table: HTMLElement): string {
   return prettyPrint(table);
 }
 
-function obj2strArr(obj: any): string[] {
+function obj2strArr(obj: { [key: string]: string; } | undefined): string[] {
   return Object.entries(obj ?? {}).map(([key, value]) => `${key}=${value}`)
 }
 

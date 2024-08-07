@@ -45,7 +45,7 @@ function splitMarkdownContent(content: string) {
         currentSegment.push(line);
         segments.push({
           type: 'code',
-          content: replaceCodeBlockWithMinted(currentSegment.join('\n'))
+          content: currentSegment.join('\n')
         });
         currentSegment = [];
         insideCodeBlock = false;

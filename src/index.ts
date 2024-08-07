@@ -1,6 +1,11 @@
-import {formatEmojis} from "./emoji.formatter.ts";
+import * as console from "node:console";
+import {generateTable} from "./table.formatter.js";
 
-const emojiString = "😀😂😍🥺😎🤔😭😜👍🎉";
-console.log(formatEmojis(emojiString));
+const table = `| Yeet |    the     |         now |
+|-----------|:-----------:|------------:|
+| Chat gpt  | define fun, ez egy nagyon hosszú szöveg lesz amit majd tördelni kell  | pop the baby |`
 
+const rez = generateTable(table);
+
+console.log(rez);
 
