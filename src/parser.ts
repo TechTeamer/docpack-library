@@ -141,9 +141,3 @@ export const loadDocpackFiles = async (
     chapters,
   }
 }
-
-const stuff = async () => {
-  console.log(await loadDocpackFiles('./input'))
-}
-
-stuff()

@@ -198,7 +198,7 @@ const convertHtmlToPdf = async (html: string, outputPath: string) => {
   const pageNumbers = await page.evaluate(() => {
     const headings = document.querySelectorAll('.heading-anchor')
     const pageRefs: { [key: string]: number } = {}
-    const pageHeight = 700
+    const pageHeight = 780
     const headerHeight = 30 * 3.78
     const contentTop = headerHeight
 
