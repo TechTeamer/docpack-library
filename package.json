@@ -1,0 +1,51 @@
+{
+	"name": "@techteamer/docpack-library",
+	"version": "1.0.0",
+	"description": "A FaceKom Document Generator Library",
+	"main": "./build/docpack-library.js",
+	"type": "module",
+	"module": "./build/docpack-library.js",
+	"types": "./build/docpack-library.d.ts",
+	"exports": {
+		".": {
+			"types": "./build/docpack-library.d.ts",
+			"import": "./build/docpack-library.js",
+			"require": "./build/docpack-library.cjs"
+		}
+	},
+	"scripts": {
+		"dev": "tsx watch ./src/test.ts",
+		"build": "tsup",
+		"test": "vitest run",
+		"lint": "biome lint",
+		"format": "biome format --write",
+		"check": "biome check  --write",
+		"commit": "cz"
+	},
+	"engines": {
+		"node": ">=20"
+	},
+	"config": {
+		"commitizen": {
+			"path": "node_modules/cz-git"
+		}
+	},
+	"files": [
+		"build"
+	],
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.2",
+		"@types/node": "^22.6.1",
+		"tsup": "^8.3.0",
+		"tsx": "^4.19.1",
+		"typescript": "^5.6.2"
+	},
+	"dependencies": {
+		"cheerio": "^1.0.0",
+		"marked": "^14.1.2",
+		"puppeteer": "^23.4.0"
+	}
+}
