@@ -15,13 +15,14 @@ const fileTypeMap = {
 const generateToc = (content: string) => {
   const headings = content.match(/^#{1,3} .+$/gm) || []
   let toc = '<h2>Table of Contents</h2>\n<ul>'
+
   for (const heading of headings) {
-    console.log(heading)
     const level = heading.match(/^#+/)?.[0].length || 0
     const text = heading.replace(/^#+\s/, '')
     const slug = text.toLowerCase().replace(/[^\w]+/g, '-')
-    toc += `\n  <li class="toc-level-${level}"><a href="#${slug}">${text}</a> <span class="page-ref" data-ref="${slug}"></span></li>`
+    toc += `\n  <li class="toc-level-${level}"><a href="#${slug}">${text} <span class="page-ref" data-ref="${slug}"></span></a></li>`
   }
+
   toc += '\n</ul>'
   return toc
 }
@@ -37,24 +38,24 @@ const convertImagesToBase64 = (html: string) => {
   const $ = cheerio.load(html)
 
   $('img').each(function () {
-    const original_src = $(this).attr('src')
+    const originalSrc = $(this).attr('src')
 
-    if (!original_src) return
-    const file_extension = original_src
+    if (!originalSrc || originalSrc.startsWith('http')) return
+    const fileExtension = originalSrc
       .split('.')
       .slice(-1)[0] as keyof typeof fileTypeMap
-    if (!fileTypeMap[file_extension]) {
-      console.log(`There is no mapping for file extension '${file_extension}'.`)
+    if (!fileTypeMap[fileExtension]) {
+      console.log(`There is no mapping for file extension '${fileExtension}'.`)
       return
     }
-    const local_filename = original_src
+    const localFilename = originalSrc
 
-    if (!fs.existsSync(local_filename)) {
-      console.log(`File does not exist: ${local_filename}`)
+    if (!fs.existsSync(localFilename)) {
+      console.log(`File does not exist: ${localFilename}`)
       return
     }
-    const local_src = `data:${fileTypeMap[file_extension]};base64,${fs.readFileSync(local_filename).toString('base64')}`
-    $(this).attr('src', local_src)
+    const localSrc = `data:${fileTypeMap[fileExtension]};base64,${fs.readFileSync(localFilename).toString('base64')}`
+    $(this).attr('src', localSrc)
     $(this).attr('style', 'max-width: 100%')
   })
 
@@ -66,7 +67,7 @@ const convertMarkdownToHtml = (
   options: DocpackConfig,
   lang: string,
 ) => {
-  console.log('asdadsds', inputPath)
+  console.log('Processing input path:', inputPath)
   const markdowns = options.chapters.map((chapter) => chapter.content)
   const markdown = markdowns
     .map((markdown) =>
@@ -76,7 +77,7 @@ const convertMarkdownToHtml = (
   let toc = null
   let cover = null
 
-  console.log(markdown)
+  console.log('Markdown content:', markdown)
   if (options.manifest.settings.tableOfContents) {
     toc = `${generateToc(markdown)} <div class="page-break"></div>`
   }
@@ -104,8 +105,29 @@ const convertMarkdownToHtml = (
             margin: 0 auto;
             padding: 20px;
         }
+        .toc-level-1 { margin-left: 0; }
         .toc-level-2 { margin-left: 20px; }
         .toc-level-3 { margin-left: 40px; }
+        .toc-level-1 a, .toc-level-2 a, .toc-level-3 a {
+            display: flex;
+            align-items: baseline;
+            text-decoration: none;
+            color: inherit;
+        }
+        .toc-level-1 a::before, .toc-level-2 a::before, .toc-level-3 a::before {
+            content: "";
+            flex: 1;
+            order: 2;
+            height: 1px;
+            background: black;
+            margin: 0 5px;
+        }
+        .page-ref {
+            order: 3;
+        }
+        .page-ref::before, .page-ref::after {
+            content: none;
+        }
         @media print {
             .page-break { page-break-after: always; }
         }
@@ -115,12 +137,6 @@ const convertMarkdownToHtml = (
         }
         th, td {
           padding: 5px;
-        }
-        .page-ref::before {
-            content: " (page ";
-        }
-        .page-ref::after {
-            content: ")";
         }
     </style>
 </head>
@@ -179,24 +195,10 @@ const convertHtmlToPdf = async (html: string, outputPath: string) => {
             </div>
         `
 
-  await page.pdf({
-    path: outputPath,
-    format: 'A4',
-    margin: { top: '30mm', right: '20mm', bottom: '30mm', left: '20mm' },
-    printBackground: true,
-    displayHeaderFooter: true,
-    headerTemplate: headerTemplate,
-    footerTemplate: `
-            <div style="font-size: 10px; text-align: center; width: 100%;">
-                Page <span class="pageNumber"></span> of <span class="totalPages"></span>
-            </div>
-        `,
-  })
-
   const pageNumbers = await page.evaluate(() => {
     const headings = document.querySelectorAll('.heading-anchor')
     const pageRefs: { [key: string]: number } = {}
-    const pageHeight = 1123
+    const pageHeight = 700
     const headerHeight = 30 * 3.78
     const contentTop = headerHeight
 
@@ -214,7 +216,7 @@ const convertHtmlToPdf = async (html: string, outputPath: string) => {
     for (const ref of pageRefs) {
       const id = ref.getAttribute('data-ref')
       if (id && pageNumbers[id]) {
-        ref.textContent = (pageNumbers[id] + (true ? 2 : 1)).toString()
+        ref.textContent = (pageNumbers[id] + 1).toString()
       }
     }
     return document.documentElement.outerHTML
