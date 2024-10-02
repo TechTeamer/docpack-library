@@ -32,19 +32,19 @@ export type DocpackManifest = {
   }
 }
 
-type DocpackAbbreviation = {
+export type DocpackAbbreviation = {
   short: string
   long: string
 }[]
 
-type DocpackReferenceCollection = {
+export type DocpackReferenceCollection = {
   [referenceId: string]: {
     title: string
     link: string
   }
 }
 
-type DocpackTerm = { term: string; definition: string }[]
+export type DocpackTerm = { term: string; definition: string }[]
 
 const loadConfigFile = async <T>(filePath: string) => {
   try {
