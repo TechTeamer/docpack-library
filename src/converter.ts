@@ -228,7 +228,7 @@ const generateTocFromHtml = (html: string): string => {
     toc += `\n  <div class="toc-level-${level}"><a href="#${id}">${text} <span class="page-ref" data-ref="${id}"></span></a></div>`
   }
 
-  return `${toc}</ul>`
+  return `${toc}</ul><div class="page-break"></div>`
 }
 
 const addHeadingIds = (content: string): string => {

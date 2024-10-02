@@ -71,7 +71,6 @@ export const generateHtmlTemplate = (
       </header>
       ${cover ?? ''}
       <div id="toc-placeholder">${toc ?? ''}</div>
-      <div class="page-break"></div>
       ${htmlContent}
   </body>
   </html>
