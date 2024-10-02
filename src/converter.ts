@@ -179,6 +179,7 @@ const convertHtmlToPdf = async (
       return finalPdf
     }
   } finally {
+    console.log('PDF converted')
     await browser.close()
     if (fs.existsSync(tempPdfPath)) {
       fs.unlinkSync(tempPdfPath)

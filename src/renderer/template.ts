@@ -67,7 +67,7 @@ export const generateHtmlTemplate = (
   <body>
       <header>
           <h1>${options.manifest.title[lang]}</h1>
-          <p>By ${options.manifest.authors.join(', ')}</p>
+          <p>${options.manifest.authors.join(', ')}</p>
       </header>
       ${cover ?? ''}
       <div id="toc-placeholder">${toc ?? ''}</div>
