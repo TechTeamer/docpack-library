@@ -37,7 +37,6 @@ export const convertMarkdownToPdf = async (
 ) => {
   const html = await convertMarkdownToHtml(options, lang)
 
-  // Generate the filename based on the manifest's title for the current language
   const title =
     options.manifest.title[lang] ||
     options.manifest.title[options.manifest.locale.default]
