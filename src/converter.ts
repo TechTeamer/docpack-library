@@ -37,11 +37,18 @@ export const convertMarkdownToPdf = async (
 ) => {
   const html = await convertMarkdownToHtml(options, lang)
 
+  // Generate the filename based on the manifest's title for the current language
+  const title =
+    options.manifest.title[lang] ||
+    options.manifest.title[options.manifest.locale.default]
+  const sanitizedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+  const filename = `${sanitizedTitle}.pdf`
+
   return convertHtmlToPdf(
     html,
     options.manifest.settings.pageNumbering,
     inputPath,
-    outputPath,
+    outputPath ? path.join(outputPath, filename) : undefined,
     options.manifest.header,
   )
 }
@@ -50,7 +57,7 @@ const convertMarkdownToHtml = async (
   options: DocpackConfig,
   lang: string,
 ): Promise<string> => {
-  const htmlContent = await generateHtmlContent(options)
+  const htmlContent = await generateHtmlContent(options, lang)
   const cover =
     options.manifest.cover && options.cover
       ? generateCover(options.cover)
@@ -64,7 +71,7 @@ const convertMarkdownToHtml = async (
   }
 
   const toc = options.manifest.settings.tableOfContents
-    ? generateTocFromHtml(finalHtmlContent)
+    ? generateTocFromHtml(finalHtmlContent, lang)
     : null
 
   return generateHtmlTemplate(options, lang, cover, toc, finalHtmlContent)
@@ -154,18 +161,23 @@ const bumpHeadings = (html: string): string => {
   return $.html()
 }
 
-const generateHtmlContent = async (options: DocpackConfig): Promise<string> => {
+const generateHtmlContent = async (
+  options: DocpackConfig,
+  lang: string,
+): Promise<string> => {
   const htmlContent = await Promise.all(
-    options.chapters.map(async (chapter, index) => {
-      const chapterHtml = await marked.parse(addHeadingIds(chapter.content))
-      const bumpedHtml = bumpHeadings(chapterHtml)
-      const processedHtml = options.references
-        ? processReferencesInHtml(bumpedHtml, options.references)
-        : bumpedHtml
-      return index > 0
-        ? `<div class="page-break"></div>${processedHtml}`
-        : processedHtml
-    }),
+    options.chapters
+      .filter((chapter) => chapter.id.endsWith(`-${lang}`))
+      .map(async (chapter, index) => {
+        const chapterHtml = await marked.parse(addHeadingIds(chapter.content))
+        const bumpedHtml = bumpHeadings(chapterHtml)
+        const processedHtml = options.references
+          ? processReferencesInHtml(bumpedHtml, options.references)
+          : bumpedHtml
+        return index > 0
+          ? `<div class="page-break"></div>${processedHtml}`
+          : processedHtml
+      }),
   )
 
   return htmlContent.join('')
@@ -188,7 +200,6 @@ const convertHtmlToPdf = async (
     '<div class="page-break"></div>',
   )
   const tempPdfPath = path.join(inputPath, 'temp.pdf')
-  const outputPdf = outputPath ? path.join(outputPath, 'output.pdf') : undefined
 
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -209,12 +220,15 @@ const convertHtmlToPdf = async (
 
     await page.setContent(finalHtml, { waitUntil: 'networkidle0' })
     const finalPdf = await page.pdf(
-      getPdfOptions(outputPdf, pageNumbering, updatedHeaderImagePath),
+      getPdfOptions(outputPath, pageNumbering, updatedHeaderImagePath),
     )
 
-    if (!outputPath) {
-      return finalPdf
+    if (outputPath) {
+      await fs.promises.writeFile(outputPath, finalPdf)
+      return outputPath
     }
+
+    return finalPdf
   } finally {
     await browser.close()
     if (fs.existsSync(tempPdfPath)) {
@@ -259,9 +273,9 @@ const getFooterTemplate = (): string => `
   </div>
 `
 
-const generateTocFromHtml = (html: string): string => {
+const generateTocFromHtml = (html: string, lang: string): string => {
   const $ = cheerio.load(html)
-  let toc = '<h2>Table of Contents</h2>'
+  let toc = `<h2>${lang === 'hu' ? 'Tartalomjegyzék' : 'Table of Contents'}</h2>`
 
   $('h1, h2, h3').each((_, element) => {
     const $element = $(element)
@@ -292,7 +306,9 @@ const convertImagesToBase64 = (html: string, inputPath: string): string => {
     if (!originalSrc || originalSrc.startsWith('http')) continue
     const fileExtension = originalSrc.split('.').slice(-1)[0] as FileExtension
     if (!FILE_TYPE_MAP[fileExtension]) {
-      console.log(`There is no mapping for file extension '${fileExtension}'.`)
+      console.error(
+        `There is no mapping for file extension '${fileExtension}'.`,
+      )
       continue
     }
 
@@ -302,7 +318,7 @@ const convertImagesToBase64 = (html: string, inputPath: string): string => {
     )
 
     if (!fs.existsSync(localFilename)) {
-      console.log(`File does not exist: ${localFilename}`)
+      console.error(`File does not exist: ${localFilename}`)
       continue
     }
 

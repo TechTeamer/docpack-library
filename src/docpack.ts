@@ -5,11 +5,18 @@ export class MarkdownToPDFConverter {
   convertFolder = async (inputFolder: string, outputFolder?: string) => {
     const docpackConfig = await loadDocpackFiles(inputFolder)
 
-    return await convertMarkdownToPdf(
-      inputFolder,
-      docpackConfig,
-      'hu',
-      outputFolder,
+    const results = docpackConfig.manifest.locale.options.map(
+      async (locale) => ({
+        locale,
+        result: await convertMarkdownToPdf(
+          inputFolder,
+          docpackConfig,
+          locale,
+          outputFolder,
+        ),
+      }),
     )
+
+    return Promise.all(results)
   }
 }

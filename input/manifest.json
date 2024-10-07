@@ -1,0 +1,22 @@
+{
+  "title": {
+    "hu": "Nagyon PDF",
+    "en": "Very PDF"
+  },
+  "authors": ["Me"],
+  "cover": true,
+  "header": "facekom_logo.svg",
+  "settings": {
+    "pageNumbering": true,
+    "chapterNumbering": true,
+    "tableOfContents": true,
+    "documentHistory": false,
+    "terms": false,
+    "abbreviations": false,
+    "references": false
+  },
+  "locale": {
+    "default": "hu",
+    "options": ["en", "hu"]
+  }
+}
