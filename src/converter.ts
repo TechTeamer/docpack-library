@@ -42,6 +42,7 @@ export const convertMarkdownToPdf = async (
     options.manifest.settings.pageNumbering,
     inputPath,
     outputPath,
+    options.manifest.header,
   )
 }
 
@@ -130,13 +131,37 @@ const generateHeadingNumber = (
   }
 }
 
+const bumpHeadings = (html: string): string => {
+  const $ = cheerio.load(html)
+  let highestHeading = 6
+
+  $('h1, h2, h3, h4, h5, h6').each((_, element) => {
+    const level = Number.parseInt(element.tagName.slice(1))
+    highestHeading = Math.min(highestHeading, level)
+  })
+
+  if (highestHeading > 1) {
+    const bump = highestHeading - 1
+    $('h1, h2, h3, h4, h5, h6').each((_, element) => {
+      const $element = $(element)
+      const currentLevel = Number.parseInt(element.tagName.slice(1))
+      const newLevel = Math.max(currentLevel - bump, 1)
+      const newTag = `h${newLevel}`
+      $element.replaceWith(`<${newTag}>${$element.html()}</${newTag}>`)
+    })
+  }
+
+  return $.html()
+}
+
 const generateHtmlContent = async (options: DocpackConfig): Promise<string> => {
   const htmlContent = await Promise.all(
     options.chapters.map(async (chapter, index) => {
       const chapterHtml = await marked.parse(addHeadingIds(chapter.content))
+      const bumpedHtml = bumpHeadings(chapterHtml)
       const processedHtml = options.references
-        ? processReferencesInHtml(chapterHtml, options.references)
-        : chapterHtml
+        ? processReferencesInHtml(bumpedHtml, options.references)
+        : bumpedHtml
       return index > 0
         ? `<div class="page-break"></div>${processedHtml}`
         : processedHtml
@@ -155,8 +180,13 @@ const convertHtmlToPdf = async (
   pageNumbering: boolean,
   inputPath: string,
   outputPath?: string,
+  headerImagePath?: string,
 ) => {
-  const updatedHtml = convertImagesToBase64(html, inputPath)
+  let updatedHtml = convertImagesToBase64(html, inputPath)
+  updatedHtml = updatedHtml.replaceAll(
+    '<div class="page-break"></div><div class="page-break"></div>',
+    '<div class="page-break"></div>',
+  )
   const tempPdfPath = path.join(inputPath, 'temp.pdf')
   const outputPdf = outputPath ? path.join(outputPath, 'output.pdf') : undefined
 
@@ -166,20 +196,26 @@ const convertHtmlToPdf = async (
   const page = await browser.newPage()
 
   try {
+    const updatedHeaderImagePath = headerImagePath
+      ? path.join(inputPath, 'assets', headerImagePath)
+      : undefined
     await page.setContent(updatedHtml, { waitUntil: 'networkidle0' })
-    await page.pdf(getPdfOptions(tempPdfPath, pageNumbering))
+    await page.pdf(
+      getPdfOptions(tempPdfPath, pageNumbering, updatedHeaderImagePath),
+    )
 
     const headings = await extractHeadings(tempPdfPath)
     const finalHtml = updateHtmlToc(updatedHtml, headings)
 
     await page.setContent(finalHtml, { waitUntil: 'networkidle0' })
-    const finalPdf = await page.pdf(getPdfOptions(outputPdf, pageNumbering))
+    const finalPdf = await page.pdf(
+      getPdfOptions(outputPdf, pageNumbering, updatedHeaderImagePath),
+    )
 
     if (!outputPath) {
       return finalPdf
     }
   } finally {
-    console.log('PDF converted')
     await browser.close()
     if (fs.existsSync(tempPdfPath)) {
       fs.unlinkSync(tempPdfPath)
@@ -187,18 +223,26 @@ const convertHtmlToPdf = async (
   }
 }
 
-const getPdfOptions = (path: string | undefined, pageNumbering: boolean) => ({
+const getPdfOptions = (
+  path: string | undefined,
+  pageNumbering: boolean,
+  headerImagePath?: string,
+) => ({
   path,
   format: 'A4' as const,
   margin: { top: '30mm', right: '20mm', bottom: '20mm', left: '20mm' },
   printBackground: true,
   displayHeaderFooter: pageNumbering,
-  headerTemplate: getHeaderTemplate(),
+  headerTemplate: getHeaderTemplate(headerImagePath),
   footerTemplate: getFooterTemplate(),
 })
 
-const getHeaderTemplate = (): string => {
-  const { data, isSvg } = getImageData('./input/assets/facekom_logo.svg')
+const getHeaderTemplate = (headerImagePath?: string): string => {
+  if (!headerImagePath) {
+    return ''
+  }
+
+  const { data, isSvg } = getImageData(headerImagePath)
   const imgSrc = isSvg
     ? `data:image/svg+xml;utf8,${encodeURIComponent(data)}`
     : `data:image/png;base64,${data}`
@@ -217,18 +261,18 @@ const getFooterTemplate = (): string => `
 
 const generateTocFromHtml = (html: string): string => {
   const $ = cheerio.load(html)
-  let toc = '<h2>Table of Contents</h2>\n<ul>'
+  let toc = '<h2>Table of Contents</h2>'
 
-  for (const element of $('h1, h2, h3').toArray()) {
+  $('h1, h2, h3').each((_, element) => {
     const $element = $(element)
-    const level = Number.parseInt(element.tagName.substring(1))
+    const level = Number.parseInt(element.tagName.slice(1))
     const text = $element.text()
     const id = $element.find('.heading-anchor').attr('id') || ''
 
     toc += `\n  <div class="toc-level-${level}"><a href="#${id}">${text} <span class="page-ref" data-ref="${id}"></span></a></div>`
-  }
+  })
 
-  return `${toc}</ul><div class="page-break"></div>`
+  return `${toc}<div class="page-break"></div>`
 }
 
 const addHeadingIds = (content: string): string => {

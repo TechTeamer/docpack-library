@@ -1,3 +1,3 @@
-import { DocPack as MarkdownToPDFConverter } from '@/docpack'
+import { MarkdownToPDFConverter } from '@/docpack'
 
 export default MarkdownToPDFConverter
