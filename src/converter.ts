@@ -167,15 +167,14 @@ const generateHtmlContent = async (
   const htmlContent = await Promise.all(
     options.chapters
       .filter((chapter) => chapter.id.endsWith(`-${lang}`))
-      .map(async (chapter, index) => {
+      .map(async (chapter) => {
         const chapterHtml = await marked.parse(addHeadingIds(chapter.content))
         const bumpedHtml = bumpHeadings(chapterHtml)
         const processedHtml = options.references
           ? processReferencesInHtml(bumpedHtml, options.references)
           : bumpedHtml
-        return index > 0
-          ? `<div class="page-break"></div>${processedHtml}`
-          : processedHtml
+
+        return `<div class="page-break"></div>${processedHtml}`
       }),
   )
 
@@ -207,7 +206,7 @@ const convertHtmlToPdf = async (
 
   try {
     const updatedHeaderImagePath = headerImagePath
-      ? path.join(inputPath, 'assets', headerImagePath)
+      ? path.join(headerImagePath)
       : undefined
     await page.setContent(updatedHtml, { waitUntil: 'networkidle0' })
     await page.pdf(
@@ -285,7 +284,7 @@ const generateTocFromHtml = (html: string, lang: string): string => {
     toc += `\n  <div class="toc-level-${level}"><a href="#${id}">${text} <span class="page-ref" data-ref="${id}"></span></a></div>`
   })
 
-  return `${toc}<div class="page-break"></div>`
+  return `${toc}`
 }
 
 const addHeadingIds = (content: string): string => {
@@ -323,7 +322,7 @@ const convertImagesToBase64 = (html: string, inputPath: string): string => {
 
     const localSrc = `data:${FILE_TYPE_MAP[fileExtension]};base64,${fs.readFileSync(localFilename).toString('base64')}`
     $img.attr('src', localSrc)
-    $img.attr('style', 'max-width: 100%')
+    $img.attr('style', 'max-width: 100%; max-height: 75vh;')
   }
 
   return $.html()
