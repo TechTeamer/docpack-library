@@ -165,17 +165,15 @@ const generateHtmlContent = async (
   lang: string,
 ): Promise<string> => {
   const htmlContent = await Promise.all(
-    options.chapters
-      .filter((chapter) => chapter.id.endsWith(`-${lang}`))
-      .map(async (chapter) => {
-        const chapterHtml = await marked.parse(addHeadingIds(chapter.content))
-        const bumpedHtml = bumpHeadings(chapterHtml)
-        const processedHtml = options.references
-          ? processReferencesInHtml(bumpedHtml, options.references)
-          : bumpedHtml
+    options.chapters[lang].map(async (chapter) => {
+      const chapterHtml = await marked.parse(addHeadingIds(chapter.content))
+      const bumpedHtml = bumpHeadings(chapterHtml)
+      const processedHtml = options.references
+        ? processReferencesInHtml(bumpedHtml, options.references)
+        : bumpedHtml
 
-        return `<div class="page-break"></div>${processedHtml}`
-      }),
+      return `<div class="page-break"></div>${processedHtml}`
+    }),
   )
 
   return htmlContent.join('')

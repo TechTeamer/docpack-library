@@ -1,6 +1,13 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
+type DocpackChapters = {
+  [language: string]: {
+    id: string
+    content: string
+  }[]
+}
+
 export type DocpackConfig = {
   manifest: DocpackManifest
   cover: string | null
@@ -8,10 +15,7 @@ export type DocpackConfig = {
   references: DocpackReferenceCollection | null
   terms: DocpackTerm | null
   chaptersConfig: Chapter[]
-  chapters: {
-    id: string
-    content: string
-  }[]
+  chapters: DocpackChapters
 }
 
 export type DocpackManifest = {
@@ -81,24 +85,48 @@ const loadFile = async (filePath: string) => {
 const loadChapters = async (
   chaptersConfig: Chapter[],
   chaptersPath: string,
+  languages: string[],
 ) => {
-  const chapterFiles = await fs.readdir(chaptersPath)
+  const chapters: DocpackChapters = {}
+
+  for (const language of languages) {
+    chapters[language] = await loadChaptersForLanguage(
+      chaptersConfig,
+      chaptersPath,
+      language,
+    )
+  }
+
+  return chapters
+}
+
+const loadChaptersForLanguage = async (
+  chaptersConfig: Chapter[],
+  chaptersPath: string,
+  language: string,
+) => {
   const chapters = await Promise.all(
-    chapterFiles.map(async (file) => {
-      const chapterPath = path.join(chaptersPath, file)
-      const chapterContent = await loadFile(chapterPath)
-
-      const chapter = chaptersConfig.find(
-        (chapter) => chapter.fileName === path.basename(file, '.md'),
-      )
-
-      if (!chapter || !chapter.include) {
+    chaptersConfig.map(async (chapter) => {
+      if (!chapter.include) {
         return
       }
 
-      return {
-        id: path.basename(file, '.md'),
-        content: chapterContent ?? '',
+      const chapterFileName = `${chapter.fileName}-${language}.md`
+      const chapterPath = path.join(chaptersPath, chapterFileName)
+
+      try {
+        const chapterContent = await loadFile(chapterPath)
+
+        if (chapterContent === null) {
+          throw new Error(`Chapter file not found: ${chapterFileName}`)
+        }
+
+        return {
+          id: chapterFileName,
+          content: chapterContent,
+        }
+      } catch (error) {
+        throw new Error(`Error loading chapter: ${chapterFileName}`)
       }
     }),
   )
@@ -161,6 +189,7 @@ export const loadDocpackFiles = async (
   const chapters = await loadChapters(
     chaptersConfig,
     path.join(inputPath, 'chapters'),
+    manifest.locale.options,
   )
 
   return {
