@@ -1,6 +1,6 @@
 {
 	"name": "@techteamer/docpack-library",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"description": "A FaceKom Document Generator Library",
 	"main": "./build/docpack-library.js",
 	"type": "module",
@@ -14,8 +14,6 @@
 		}
 	},
 	"scripts": {
-		"dev": "tsx watch ./src/test.ts",
-		"devpdf": "tsx watch ./src/testpdf.ts",
 		"build": "tsup",
 		"test": "vitest run",
 		"lint": "biome lint",
@@ -42,7 +40,6 @@
 		"@types/node": "^22.6.1",
 		"@types/pdf-parse": "^1.1.4",
 		"tsup": "^8.3.0",
-		"tsx": "^4.19.1",
 		"typescript": "^5.6.2"
 	},
 	"dependencies": {
