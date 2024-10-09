@@ -203,9 +203,7 @@ const convertHtmlToPdf = async (
   const page = await browser.newPage()
 
   try {
-    const updatedHeaderImagePath = headerImagePath
-      ? path.join(headerImagePath)
-      : undefined
+    const updatedHeaderImagePath = headerImagePath ? headerImagePath : undefined
     await page.setContent(updatedHtml, { waitUntil: 'networkidle0' })
     await page.pdf(
       getPdfOptions(tempPdfPath, pageNumbering, updatedHeaderImagePath),
