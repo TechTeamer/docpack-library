@@ -41,8 +41,8 @@
 		"url": "https://github.com/TechTeamer/dockpack-library/issues"
 	  },
 	  "homepage": "https://github.com/TechTeamer/dockpack-library",
-	"author": "",
-	"license": "ISC",
+	"author": "TechTeamer",
+	"license": "MIT",
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.2",
 		"@types/node": "^22.6.1",
