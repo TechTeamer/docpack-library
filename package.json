@@ -32,15 +32,20 @@
 	"files": [
 		"build"
 	],
-	"keywords": ["pdf", "docpack", "docpack-library", "generator"],
+	"keywords": [
+		"pdf",
+		"docpack",
+		"docpack-library",
+		"generator"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/TechTeamer/docpack-library.git"
-	  },
-	  "bugs": {
+	},
+	"bugs": {
 		"url": "https://github.com/TechTeamer/dockpack-library/issues"
-	  },
-	  "homepage": "https://github.com/TechTeamer/dockpack-library",
+	},
+	"homepage": "https://github.com/TechTeamer/dockpack-library",
 	"author": "TechTeamer",
 	"license": "MIT",
 	"devDependencies": {
