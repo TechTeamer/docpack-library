@@ -1,17 +1,17 @@
-import { marked } from 'marked'
-import * as cheerio from 'cheerio'
-import puppeteer from 'puppeteer'
 import fs from 'node:fs'
 import path from 'node:path'
 import type { DocpackConfig, DocpackReferenceCollection } from '@/parser'
-import { extractHeadings } from '@/utils/pdf'
-import { generateHtmlTemplate } from '@/renderer/template'
 import {
   renderAbbreviations,
   renderReferences,
   renderTerms,
 } from '@/renderer/table'
+import { generateHtmlTemplate } from '@/renderer/template'
+import { extractHeadings } from '@/utils/pdf'
 import { escapeRegExp, getSlug, removeVersionPrefix } from '@/utils/text'
+import * as cheerio from 'cheerio'
+import { marked } from 'marked'
+import puppeteer from 'puppeteer'
 
 const FILE_TYPE_MAP = {
   png: 'image/png',
