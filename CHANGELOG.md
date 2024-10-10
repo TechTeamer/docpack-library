@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/TechTeamer/docpack-library/compare/release-v1.0.0...release-v1.0.1) (2024-10-10)
+
+
+### Bug Fixes
+
+* publish public fix ([5c08bb4](https://github.com/TechTeamer/docpack-library/commit/5c08bb40de601cb52616282359f11df59b04b105))
+
 # 1.0.0 (2024-10-10)
 
 
